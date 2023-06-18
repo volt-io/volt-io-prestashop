@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="bootstrap.php" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.0/phpunit.xsd" colors="true" processIsolation="true" verbose="true">
+
+    <testsuites>
+        <testsuite name="default">
+            <directory suffix="volt.php">./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../../src</directory>
+            <exclude>
+                <file>../../src/Adapter/index.php</file>
+
+                <file>../../src/Api/index.php</file>
+
+                <file>../../src/Hook/index.php</file>
+
+
+
+                <file>../../src/Config/index.php</file>
+                <file>../../src/Config/Config.php</file>
+
+                <file>../../src/Database/index.php</file>
+                <file>../../src/Database/sql/index.php</file>
+
+                <file>../../src/Entity/index.php</file>
+
+                <file>../../src/Exception/ApiException.php</file>
+                <file>../../src/Exception/DatabaseException.php</file>
+                <file>../../src/Exception/index.php</file>
+
+                <file>../../src/Factory/index.php</file>
+                <file>../../src/Factory/ContextFactory.php</file>
+
+                <file>../../src/Service/index.php</file>
+
+                <file>../../src/Repository/index.php</file>
+
+                <file>../../src/Statuses/index.php</file>
+
+                <file>../../src/Util/index.php</file>
+
+                <file>../../src/index.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-html" target="../../build/clover.html"/>
+    </logging>
+
+</phpunit>

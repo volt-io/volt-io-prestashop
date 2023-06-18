@@ -1,0 +1,64 @@
+imports:
+  - { resource: ./context.yml }
+
+services:
+  _defaults:
+    public: true
+
+  volt.db:
+    class: 'Db'
+    public: true
+    factory: ['Db', 'getInstance']
+
+  volt:
+    class: volt
+    public: true
+    factory: ['Module', 'getInstanceByName']
+    arguments:
+      - 'volt'
+
+  volt.configuration:
+    class: 'Volt\Adapter\ConfigurationAdapter'
+    public: true
+    arguments:
+      - '@volt.shop'
+
+  volt.repository.transaction:
+    class: 'Volt\Repository\TransactionRepository'
+    public: true
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '@doctrine.orm.default_entity_manager'
+      - '%database_prefix%'
+
+  volt.repository.refund:
+    class: 'Volt\Repository\RefundRepository'
+    public: true
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '@doctrine.orm.default_entity_manager'
+      - '%database_prefix%'
+
+  volt.order_state:
+    class: 'OrderState'
+    public: true
+
+  volt.factory.state:
+    class: 'Volt\Factory\StateFactory'
+    public: true
+    arguments:
+      - '@volt'
+      - '@volt.order_state'
+      - '@volt.configuration'
+
+  volt.order_history:
+    class: 'OrderHistory'
+    public: true
+
+  volt.handler.order_state:
+    class: 'Volt\Handler\OrderStateHandler'
+    public: true
+    arguments:
+      - '@volt.order_history'
+      - '@volt.configuration'
+      - '@volt.repository.transaction'

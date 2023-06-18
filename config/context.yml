@@ -1,0 +1,43 @@
+services:
+  _defaults:
+    public: true
+
+  volt.context:
+    class: 'Context'
+    public: true
+    factory: ['Volt\Factory\ContextFactory', 'getContext']
+
+  volt.cart:
+    class: 'Cart'
+    public: true
+    factory: [ 'Volt\Factory\ContextFactory', 'getCart' ]
+
+  volt.currency:
+    class: 'Currency'
+    public: true
+    factory: [ 'Volt\Factory\ContextFactory', 'getCurrency' ]
+
+  volt.cookie:
+    class: 'Cookie'
+    public: true
+    factory: ['Volt\Factory\ContextFactory', 'getCookie']
+
+  volt.language:
+    class: 'Language'
+    public: true
+    factory: ['Volt\Factory\ContextFactory', 'getLanguage']
+
+  volt.link:
+    class: 'Link'
+    public: true
+    factory: [ 'Volt\Factory\ContextFactory', 'getLink' ]
+
+  volt.smarty:
+    class: 'Smarty'
+    public: true
+    factory: ['Volt\Factory\ContextFactory', 'getSmarty']
+
+  volt.shop:
+    class: 'Shop'
+    public: true
+    factory: ['Volt\Factory\ContextFactory', 'getShop']

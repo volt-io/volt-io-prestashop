@@ -1,0 +1,6 @@
+parameters:
+  reportUnmatchedIgnoredErrors: true
+  bootstrapFiles:
+    - bootstrap.php
+  level: 5
+

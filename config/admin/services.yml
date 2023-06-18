@@ -1,0 +1,20 @@
+imports:
+  - { resource: ../common.yml }
+
+services:
+  volt.repository.transaction:
+    class: 'Volt\Repository\TransactionRepository'
+    public: true
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '@doctrine.orm.default_entity_manager'
+      - '%database_prefix%'
+
+
+  volt.repository.refund:
+    class: 'Volt\Repository\RefundRepository'
+    public: true
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '@doctrine.orm.default_entity_manager'
+      - '%database_prefix%'
