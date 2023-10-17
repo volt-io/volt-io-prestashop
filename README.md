@@ -11,7 +11,7 @@
 Follow the instructions below:
 
 1. Log into your admin panel in PrestaShop.
-2. Click Modules > Catalogue and type "Pay by Bank" into the search engine.
+2. Click Modules > Marketplace and type "Pay by Bank" into the search engine.
 3. Once you have found the payment module, click Install
 
 ## Installation of the plug-in from the zip package
