@@ -27,7 +27,7 @@ Follow the instructions below:
 
 ![Upload module](views/img/help/install-upload-modal.png)
 
-Once the installation is complete, the system will automatically take you to Module Configuration.
+Once the installation is complete, the system will automatically take you to the Module Configuration.
 
 
 ## Configuration
