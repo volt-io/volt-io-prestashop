@@ -10,5 +10,5 @@
  * @license   LICENSE.txt
  *}
 <div class="col-sm-12 text-sm-center">
-    {l s='Payment status:' mod='volt'} <strong>{$status}</strong>
+    {l s='Payment status:' mod='volt'} <strong>{$status|escape:'htmlall':'UTF-8'}</strong>
 </div>

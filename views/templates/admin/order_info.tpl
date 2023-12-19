@@ -46,19 +46,19 @@
 						<tbody>
 						<tr>
 							<td>
-                                {$ref['crc']}
+                                {$ref['crc']|escape:'htmlall':'UTF-8'}
 							</td>
 							<td>
-                                {$ref['amount']/100|string_format:"%.2f"}
+                                {Tools::convertPriceFull($ref['amount'])|escape:'html':'UTF-8'}
 							</td>
 							<td>
-                                reference
+
 							</td>
 							<td>
-                                {$ref['currency']}
+                                {$ref['currency']|escape:'htmlall':'UTF-8'}
 							</td>
 							<td>
-                                {$ref['status']}
+                                {$ref['status']|escape:'htmlall':'UTF-8'}
 							</td>
 						</tr>
 						</tbody>
@@ -72,7 +72,7 @@
 					<div role="alert" class="alert alert-danger">
 						<p class="alert-text">
                             {foreach from=$_errors item=msg}
-                                {$msg}
+                                {$msg|escape:'html':'UTF-8'}
                             {/foreach}
 						</p>
 					</div>
@@ -82,7 +82,7 @@
 					<div role="alert" class="alert alert-success">
 						<p class="alert-text">
                             {foreach from = $_success item = msg}
-                                {$msg}
+                                {$msg|escape:'html':'UTF-8'}
                             {/foreach}
 						</p>
 					</div>

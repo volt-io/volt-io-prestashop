@@ -15,19 +15,17 @@ declare(strict_types=1);
 
 namespace Volt\Database;
 
-use Shop;
-use Tools;
-use Volt;
 use Volt\Exception\DatabaseException;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class Installer
 {
-    /**
-     * @var Volt
-     */
     protected $module;
 
-    public function __construct(Volt $module)
+    public function __construct(\Volt $module)
     {
         $this->module = $module;
     }
@@ -40,11 +38,13 @@ class Installer
         $url = $this->module->getLocalPath() . 'src/Database/sql/install.sql';
         if (!$this->installDb($url)) {
             $this->module->_errors[] = $this->module->l('Table installation error');
+
             return false;
         }
 
         if (!$this->installContext()) {
             $this->module->_errors[] = $this->module->l('Context installation error');
+
             return false;
         }
 
@@ -65,6 +65,7 @@ class Installer
      * @param $sql_path
      *
      * @return bool
+     *
      * @throws DatabaseException
      */
     public function installDb($sql_path): bool
@@ -87,8 +88,8 @@ class Installer
 
     public function installContext(): bool
     {
-        if (Shop::isFeatureActive()) {
-            Shop::setContext(Shop::CONTEXT_ALL);
+        if (\Shop::isFeatureActive()) {
+            \Shop::setContext(\Shop::CONTEXT_ALL);
         }
 
         return true;
@@ -101,19 +102,26 @@ class Installer
      * @param $db
      *
      * @return bool
+     *
      * @throws DatabaseException
      */
     public function executeSqlFromFile(string $path, $db): bool
     {
-        $sql = Tools::file_get_contents($path);
+        $install = true;
+        $sql = \Tools::file_get_contents($path);
         $sql = str_replace(['_DB_PREFIX_', '_MYSQL_ENGINE_'], [_DB_PREFIX_, _MYSQL_ENGINE_], $sql);
 
-        try {
-            $db->execute($sql);
-
-            return true;
-        } catch (\Exception $exception) {
-            throw new DatabaseException($exception->getMessage());
+        $sqlQuery = explode(';', $sql);
+        foreach ($sqlQuery as $q) {
+            $q = trim($q);
+            if (!empty($q)) {
+                $install = $db->execute($q);
+                if (!$install) {
+                    throw new DatabaseException();
+                }
+            }
         }
+
+        return $install;
     }
 }

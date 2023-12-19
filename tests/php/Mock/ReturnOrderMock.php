@@ -2,8 +2,6 @@
 
 namespace Volt\Tests\Mock;
 
-use phpDocumentor\Reflection\Types\Object_;
-
 class ReturnOrderMock
 {
     /**
@@ -43,5 +41,4 @@ class ReturnOrderMock
     {
         return $this->data;
     }
-
 }

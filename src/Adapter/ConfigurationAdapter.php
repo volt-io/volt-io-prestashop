@@ -10,9 +10,14 @@
  * @copyright 2023, Volt Technologies Holdings Limited
  * @license   LICENSE.txt
  */
+
 namespace Volt\Adapter;
 
 use Configuration as Cfg;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class ConfigurationAdapter
 {

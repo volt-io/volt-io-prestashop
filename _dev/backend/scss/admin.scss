@@ -113,7 +113,8 @@ body.mobile #content.bootstrap {
 
 .volt-switcher {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-wrap: wrap;
   min-width: 100%;
   margin-top: 3px;
   font-size: .813rem;
@@ -350,3 +351,6 @@ body {
 	max-width: 240px;
   }
 }
+
+
+

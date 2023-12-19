@@ -15,6 +15,9 @@ declare(strict_types=1);
 use Configuration as Cfg;
 use Volt\Util\Helper;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 class AdminVoltAjaxController extends ModuleAdminController
 {
     public function __construct()
@@ -35,15 +38,17 @@ class AdminVoltAjaxController extends ModuleAdminController
         try {
             foreach (Helper::getFields() as $configField) {
                 $value = Tools::getValue($configField, Cfg::get($configField));
-                Cfg::updateValue($configField, $value);
+                if ($value) {
+                    Cfg::updateValue($configField, $value);
+                }
             }
-            $this->ajaxDie(Tools::jsonEncode(['success' => true]));
+            $this->ajaxDie(json_encode(['success' => true]));
         } catch (Exception $exception) {
             PrestaShopLogger::addLog(
-                'Volt - Ajax Error',
+                'Volt - Ajax Error ' . $exception->getMessage(),
                 4
             );
-            $this->ajaxDie(Tools::jsonEncode(['success' => false]));
+            $this->ajaxDie(json_encode(['success' => false]));
         }
     }
 }

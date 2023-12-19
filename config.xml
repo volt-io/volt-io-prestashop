@@ -2,7 +2,7 @@
 <module>
     <name>volt</name>
     <displayName><![CDATA[Pay by Bank]]></displayName>
-    <version><![CDATA[1.0.5]]></version>
+    <version><![CDATA[1.0.7]]></version>
     <description><![CDATA[Enable your customers to quickly and securely check out using their bank account.]]></description>
     <author><![CDATA[Volt Technologies Holdings Limited]]></author>
     <tab><![CDATA[payments_gateways]]></tab>

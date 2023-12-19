@@ -8,18 +8,9 @@ use Db;
 use Exception;
 use Module;
 use Symfony\Component\Translation\Translator;
-use Tools;
-use Tab;
-use PrestaShopLogger;
-use Language;
-use Shop;
-use Context;
-use Mockery;
-use PHPUnit\Framework\TestCase;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Currency;
-use Volt\Exception\DatabaseException;
 use Volt\Database\Installer;
+use Volt\Exception\DatabaseException;
+
 class InstallerTest extends \PHPUnit\Framework\TestCase
 {
     private $module;
@@ -54,7 +45,6 @@ class InstallerTest extends \PHPUnit\Framework\TestCase
 
         $this->sql = $this->module->getLocalPath() . 'src/Database/sql/install.sql';
         $this->fakeSql = $this->module->getLocalPath() . 'src/Database/sql/fakeInstall.sql';
-
     }
 
     public function testShouldInstallSuccess()
@@ -74,12 +64,11 @@ class InstallerTest extends \PHPUnit\Framework\TestCase
     /**
      * @throws DatabaseException
      */
-    public function testShouldInstallDbReturnFalse()
-    :void
+    public function testShouldInstallDbReturnFalse(): void
     {
         $stub = $this->getMockBuilder(Installer::class)
             ->setConstructorArgs([
-                $this->module
+                $this->module,
             ])
             ->onlyMethods(['installDb'])
             ->getMock();
@@ -92,12 +81,11 @@ class InstallerTest extends \PHPUnit\Framework\TestCase
     /**
      * @throws DatabaseException
      */
-    public function testShouldInstallContextReturnFalse()
-    :void
+    public function testShouldInstallContextReturnFalse(): void
     {
         $stub = $this->getMockBuilder(Installer::class)
             ->setConstructorArgs([
-                $this->module
+                $this->module,
             ])
             ->onlyMethods(['installContext'])
             ->getMock();
@@ -106,7 +94,6 @@ class InstallerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(false, $stub->install());
     }
-
 
     /**
      * @throws DatabaseException
@@ -125,7 +112,6 @@ class InstallerTest extends \PHPUnit\Framework\TestCase
         $this->assertIsBool($given);
         $this->assertTrue($given);
     }
-
 
     public function testShouldUninstallDbReturnFalse()
     {

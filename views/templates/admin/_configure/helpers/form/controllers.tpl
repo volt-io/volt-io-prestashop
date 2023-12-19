@@ -18,7 +18,8 @@
         {l s='Notification URL (https)' mod='volt'}
 	</h4>
 	<p>
-		<input type="text" disabled value="{Context::getContext()->link->getModuleLink('volt', 'notifications')}">
+		<input type="text" disabled
+		       value="{Context::getContext()->link->getModuleLink('volt', 'notifications')|escape:'html':'UTF-8'}">
 	</p>
 </div>
 
@@ -32,18 +33,21 @@
         {l s='On Payment Success' mod='volt'}
 	</h4>
 	<p>
-		<input type="text" disabled value="{Context::getContext()->link->getModuleLink('volt', 'success')}">
+		<input type="text" disabled
+		       value="{Context::getContext()->link->getModuleLink('volt', 'success')|escape:'html':'UTF-8'}">
 	</p>
 	<h4>
         {l s='On Payment Pending' mod='volt'}
 	</h4>
 	<p>
-		<input type="text" disabled value="{Context::getContext()->link->getModuleLink('volt', 'pending')}">
+		<input type="text" disabled
+		       value="{Context::getContext()->link->getModuleLink('volt', 'pending')|escape:'html':'UTF-8'}">
 	</p>
 	<h4>
         {l s='On Payment Failure' mod='volt'}
 	</h4>
 	<p>
-		<input type="text" disabled value="{Context::getContext()->link->getModuleLink('volt', 'failure')}">
+		<input type="text" disabled
+		       value="{Context::getContext()->link->getModuleLink('volt', 'failure')|escape:'html':'UTF-8'}">
 	</p>
 </div>

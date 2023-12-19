@@ -14,11 +14,13 @@ declare(strict_types=1);
 
 namespace Volt\Handler;
 
-use Order;
-use OrderHistory;
 use Volt\Adapter\ConfigurationAdapter;
 use Volt\Config\Config;
 use Volt\Repository\TransactionRepository;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class OrderStateHandler
 {
@@ -38,7 +40,7 @@ class OrderStateHandler
     private $transactionsRepository;
 
     public function __construct(
-        OrderHistory $orderHistory,
+        \OrderHistory $orderHistory,
         ConfigurationAdapter $configuration,
         transactionRepository $transactionsRepository
     ) {
@@ -59,14 +61,14 @@ class OrderStateHandler
      * @return void
      */
     public function changeOrdersState(
-        Order $order,
+        \Order $order,
         string $paymentId,
         bool $error = false,
         bool $refund = false,
         bool $notPaid = false
     ): void {
         $reference = $order->reference;
-        $referencedOrders = Order::getByReference($reference)->getResults();
+        $referencedOrders = \Order::getByReference($reference)->getResults();
         foreach ($referencedOrders as $orderObject) {
             if (!is_null($orderObject->id)) {
                 $this->changeOrderStateById($orderObject, $paymentId, $error, $refund, $notPaid);
@@ -86,7 +88,7 @@ class OrderStateHandler
      * @return void
      */
     private function changeOrderStateById(
-        Order $order,
+        \Order $order,
         string $paymentId,
         bool $error = false,
         bool $refund = false,

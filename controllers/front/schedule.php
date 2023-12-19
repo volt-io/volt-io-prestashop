@@ -36,7 +36,7 @@ class VoltScheduleModuleFrontController extends ModuleFrontController
 
     private function schedule()
     {
-        $date = new \DateTime('2023-04-20 20:03:48');
+        $date = new \DateTime('now');
         $dateFormat = $date->format('Y-m-d H:i:s');
 
         $sql = new \DbQuery();

@@ -14,6 +14,10 @@ declare(strict_types=1);
 
 namespace Volt\Service;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class RefundOrder
 {
     /**
@@ -33,6 +37,7 @@ class RefundOrder
      * @param string $paymentId
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function checkIsRefundActive(string $paymentId): bool
@@ -42,7 +47,7 @@ class RefundOrder
         }
 
         try {
-            $refund = $this->module->api->request('GET', 'payments/' . $paymentId . '/refund-details');
+            $refund = $this->module->api->request('GET', 'payments/' . urldecode($paymentId) . '/refund-details');
             if ($refund->refundAvailable) {
                 return (bool) $refund->refundAvailable;
             }
@@ -61,6 +66,7 @@ class RefundOrder
      * @param null $amount
      *
      * @return bool|void
+     *
      * @throws \Exception
      */
     public function requestRefund(string $paymentId, string $paymentType, $amount = null)
@@ -76,7 +82,7 @@ class RefundOrder
         }
 
         try {
-            return $this->module->api->request('POST', 'payments/' . $paymentId . '/request-refund', $payload);
+            return $this->module->api->request('POST', 'payments/' . urldecode($paymentId) . '/request-refund', $payload);
         } catch (\Exception $e) {
             throw new \Exception('Error in the method of execution of the order return');
         }

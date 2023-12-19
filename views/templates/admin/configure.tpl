@@ -50,7 +50,7 @@
 
                 {if isset($module_update_link)}
 					<li>
-						<a id="desc-module-update" class="toolbar_btn" href="{$module_update_link}"
+						<a id="desc-module-update" class="toolbar_btn" href="{$module_update_link|escape:'htmlall':'UTF-8'}"
 						   title="{l s='Update' d='Admin.Modules.Feature'}">
 							<i class="process-icon-refresh"></i>
 							<div>{l s='Check update' d='Admin.Modules.Feature'}</div>

@@ -1,22 +1,20 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Volt\Tests\Util;
 
 use Context;
-use Db;
+use Module;
 use PHPUnit\Framework\TestCase;
 use Volt\Util\Helper;
-use Module;
 
 class HelperTest extends TestCase
 {
     private $module;
     private $context;
 
-    protected function setUp()
-    :void
+    protected function setUp(): void
     {
         $this->module = Module::getInstanceByName('volt');
         $this->context = Context::getContext();
@@ -45,7 +43,7 @@ class HelperTest extends TestCase
             'VOLT_PENDING_STATE_ID',
             'VOLT_NOT_PAID_STATE_ID',
             'VOLT_SUCCESS_STATE_ID',
-            'VOLT_FAILURE_STATE_ID'
+            'VOLT_FAILURE_STATE_ID',
         ];
 
         $this->assertEquals($expected, $fields);
@@ -92,7 +90,6 @@ class HelperTest extends TestCase
 
     public function testShouldGetCrc()
     {
-
         $cart = $this->getMockBuilder(\Cart::class)
             ->disableOriginalConstructor()
             ->enableOriginalClone()

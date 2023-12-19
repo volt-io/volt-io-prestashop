@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace Volt\Factory\State;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 interface IState
 {
     public function create();

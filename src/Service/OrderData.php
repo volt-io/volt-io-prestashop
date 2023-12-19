@@ -16,6 +16,10 @@ namespace Volt\Service;
 
 use Volt\Util\Helper;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class OrderData
 {
     /**
@@ -66,7 +70,8 @@ class OrderData
             'payer' => [
                 'reference' => $payerReference,
                 'email' => $customerEmail,
-                'name' => sprintf('%s %s', $this->address->firstname, $this->address->lastname),
+                'firstName' => $this->address->firstname,
+                'lastName' => $this->address->lastname,
                 'ip' => Helper::getClientIp(),
             ],
             'notificationUrl' => $this->context->link->getModuleLink(

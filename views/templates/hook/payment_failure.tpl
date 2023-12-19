@@ -25,10 +25,10 @@
 			</p>
 
 			<div class="volt-status__navigate">
-				<a href="{$urls.base_url}" class="btn btn-primary">
+				<a href="{$urls.base_url|escape:'htmlall':'UTF-8'}" class="btn btn-primary">
                     {l s='Return to the shop' mod='volt'}
 				</a>
-				<a class="btn btn-primary" href="{$urls.pages.history}">
+				<a class="btn btn-primary" href="{$urls.pages.history|escape:'htmlall':'UTF-8'}">
                     {l s='View order history' mod='volt'}
 				</a>
 			</div>

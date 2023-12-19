@@ -14,6 +14,10 @@ declare(strict_types=1);
 
 namespace Volt\Service;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Schedule
 {
     /**
@@ -32,9 +36,6 @@ class Schedule
         $failedTransactions = $this->getFailedTransactions();
         $rejectedTransactions = $this->getRejectedTransactions();
         $pendingTransactions = $this->getPendingTransactions();
-
-        $this->module->debug($failedTransactions, '$failedTransactions');
-        $this->module->debug($rejectedTransactions, '$rejectedTransactions');
 
         $this->precessAll($pendingTransactions);
         $this->precessAll($failedTransactions);
@@ -62,6 +63,7 @@ class Schedule
         $sql->from('volt_transactions', 'v');
         $sql->where('v.date_upd < DATE_ADD("' . $dateFormat . '", INTERVAL 7 DAY)');
         $sql->where('v.status = "PENDING"');
+
         return \Db::getInstance()->executeS($sql);
     }
 
@@ -76,6 +78,7 @@ class Schedule
         $sql->where('v.date_upd < DATE_ADD("' . $dateFormat . '", INTERVAL 3 HOUR)');
         $sql->where('v.status = "FAILED"');
         $sql->where('v.status_detail = "ABANDONED_BY_USER"');
+
         return \Db::getInstance()->executeS($sql);
     }
 
@@ -86,6 +89,7 @@ class Schedule
         $sql->from('volt_transactions', 'v');
         $sql->where('v.status = "FAILED"');
         $sql->where('v.status_detail != "ABANDONED_BY_USER"');
+
         return \Db::getInstance()->executeS($sql);
     }
 
@@ -103,6 +107,5 @@ class Schedule
         $order = new \Order($orderId);
         $stateService = $this->module->getService('volt.handler.order_state');
         $stateService->changeOrdersState($order, $paymentId, false, false, true);
-        $this->module->debug($orderId, 'repo3');
     }
 }

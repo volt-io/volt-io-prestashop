@@ -15,6 +15,10 @@ declare(strict_types=1);
 
 namespace Volt\Hook;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Design extends AbstractHook
 {
     public const HOOK_LIST = [
@@ -28,9 +32,11 @@ class Design extends AbstractHook
 
     /**
      * Hook header assets scripts and styles
+     *
      * @codeCoverageIgnore
      *
      * @return void
+     *
      * @throws \Exception
      */
     public function hookActionFrontControllerSetMedia(): void
@@ -75,8 +81,8 @@ class Design extends AbstractHook
                 'voltSettings' => [
                     'ajax_url' => $ajax,
                     'env' => $this->configuration->get('VOLT_ENV'),
-                    'country' => $this->context->language->iso_code,
-                    'language' => $this->context->country->iso_code,
+                    'country' => $this->context->country->iso_code,
+                    'language' => $this->context->language->iso_code,
                     'errorMsg' => $this->module->l('Widget initialization error, please validate data in payment module'),
                 ],
             ]
@@ -88,6 +94,7 @@ class Design extends AbstractHook
         $this->context->smarty->assign([
             'volt_dir' => $this->module->img_path,
         ]);
+
         return $this->context->smarty->fetch('module:volt/views/templates/front/modal.tpl');
     }
 

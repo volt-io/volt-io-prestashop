@@ -14,7 +14,9 @@ declare(strict_types=1);
 
 namespace Volt\Factory\State;
 
-use OrderState;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class SuccessState implements IState
 {
@@ -26,7 +28,7 @@ class SuccessState implements IState
     private $configuration;
 
     /**
-     * @var OrderState
+     * @var \OrderState
      */
     private $orderState;
 
@@ -36,7 +38,7 @@ class SuccessState implements IState
     ];
 
     public function __construct(
-        OrderState $orderState,
+        \OrderState $orderState,
         $configuration,
         string $moduleName
     ) {
@@ -46,9 +48,9 @@ class SuccessState implements IState
     }
 
     /**
-     * @return OrderState
+     * @return \OrderState
      */
-    public function create(): OrderState
+    public function create(): \OrderState
     {
         $name = [];
         foreach (\Language::getLanguages() as $lang) {

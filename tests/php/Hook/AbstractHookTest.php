@@ -2,15 +2,8 @@
 
 namespace Volt\Tests\Hook;
 
-use Configuration as Config;
-use OrderHistory;
-use Order;
-use Tools;
-use Context;
-use Db;
-use PHPUnit\Framework\TestCase;
 use Module;
-use Currency;
+use PHPUnit\Framework\TestCase;
 
 class AbstractHookTest extends TestCase
 {

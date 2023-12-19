@@ -15,6 +15,10 @@ declare(strict_types=1);
 
 namespace Volt\Config;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Config
 {
     public const VOLT_PENDING = 'VOLT_PENDING_STATE_ID';

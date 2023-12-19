@@ -94,12 +94,14 @@ export function createPartnerIcons(moduleElm: HTMLElement) {
 }
 
 export function showPartnerIcons(moduleElm: HTMLElement) {
-    let width : number = moduleElm.closest('.payment-option').clientWidth;
-    const icons: HTMLDivElement = document.querySelector<HTMLDivElement>('.volt-icons');
+    if (moduleElm) {
+        let width: number = moduleElm.closest('.payment-option').clientWidth;
+        const icons: HTMLDivElement = document.querySelector<HTMLDivElement>('.volt-icons');
 
-    icons.style.display = 'none';
+        icons.style.display = 'none';
 
-    if(moduleElm && width > 450) {
-        icons.style.display = 'flex';
+        if (width > 450) {
+            icons.style.display = 'flex';
+        }
     }
 }

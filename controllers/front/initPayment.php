@@ -24,6 +24,7 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
 {
     public $ajax;
     private $transitionRepository;
+
     public function __construct()
     {
         parent::__construct();
@@ -46,7 +47,14 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
         if (Tools::getValue('action') === 'initPayment') {
             $this->initPayment();
         } elseif (Tools::getValue('action') === 'createTransaction') {
-            $this->initTransaction();
+            $paymentId = trim(Tools::getValue('paymentId'));
+            $this->initTransaction($paymentId);
+
+            $paymentId = trim(Tools::getValue('paymentId'));
+            $context = $this->module->getContext();
+            $cart = $context->cart;
+            $customer = $context->customer;
+            $this->createOrder($cart, $customer, $paymentId);
         }
 
         exit;
@@ -67,7 +75,7 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
     private function createOrderData(): array
     {
         $context = $this->module->getContext();
-        $this->module->debug(new AddressCore($context->cart->id_address_invoice), 'json');
+
         return $this->getOrderData($context)->getData($context->cart);
     }
 
@@ -75,7 +83,7 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
     {
         $pay = $this->module->api->request(
             'POST',
-            'dropin-payments',
+            'dropin',
             $this->createOrderData(),
             true
         );
@@ -83,10 +91,8 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
         $this->ajaxRender(json_encode($pay));
     }
 
-    public function initTransaction()
+    public function initTransaction($paymentId)
     {
-        $paymentId = Tools::getValue('paymentId');
-
         if (!$paymentId) {
             return false;
         }
@@ -99,11 +105,6 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
             \PrestaShopLogger::addLog($exception, 3);
         }
 
-        $context = $this->module->getContext();
-        $cart = $context->cart;
-        $customer = $context->customer;
-        $this->createOrder($cart, $customer, $paymentId);
-
         return $this->ajaxRender(json_encode(['status' => true]));
     }
 
@@ -114,7 +115,7 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
      * @param $customer
      * @param $paymentId
      *
-     * @return void
+     * @return mixed
      */
     private function createOrder($cart, $customer, $paymentId): void
     {
@@ -122,19 +123,12 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
         $state = 'PENDING';
 
         if (
-            \Validate::isLoadedObject($cart) &&
-            !$cart->OrderExists()
+            \Validate::isLoadedObject($cart)
+            && !$cart->OrderExists()
         ) {
-            $this->voltValidateOrder($cart->id, $orderTotal, $customer);
+            $this->createShopOrder($cart->id, $orderTotal, $customer, $paymentId);
 
             if (isset($this->module->currentOrder) && !empty($this->module->currentOrder)) {
-                $payload = [
-                    'payment_id' => $paymentId,
-                    'order_id' => $this->module->currentOrder,
-                    'cart' => $cart,
-                    'state' => $state,
-                ];
-                $this->module->debug($payload, 'transactionRepository');
                 $this->transitionRepository->updateTransactionOrderByPaymentId(
                     Helper::createCrc($cart, $customer),
                     $paymentId,
@@ -152,11 +146,23 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
      * @param $cardId
      * @param $orderTotal
      * @param $customer
+     * @param $paymentId
      */
-    private function voltValidateOrder($cardId, $orderTotal, $customer)
+    private function createShopOrder($cardId, $orderTotal, $customer, $paymentId)
     {
         $voltStates = (bool) Cfg::get('VOLT_CUSTOM_STATE');
         $state = $voltStates ? Cfg::get(Config::VOLT_PENDING) : Cfg::get('PS_OS_BANKWIRE');
+
+//        sleep(3);
+//
+//        try {
+//            $order = $this->module->api->request('GET', 'payments/' . urldecode($paymentId));
+//            \PrestaShopLogger::addLog($this->module->api->getToken(), 1);
+//            \PrestaShopLogger::addLog($paymentId, 1);
+//            \PrestaShopLogger::addLog(print_r($order, true), 1);
+//        } catch (\Exception $exception) {
+//            \PrestaShopLogger::addLog($exception, 1);
+//        }
 
         $this->module->validateOrder(
             (int) $cardId,

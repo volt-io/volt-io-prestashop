@@ -18,6 +18,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Volt\Entity\VoltRefunds;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class RefundRepository
 {
     public const TABLE = 'volt_refunds';

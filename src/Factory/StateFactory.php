@@ -14,22 +14,19 @@ declare(strict_types=1);
 
 namespace Volt\Factory;
 
-use OrderState;
 use Volt\Adapter\ConfigurationAdapter;
 use Volt\Factory\State\FailureState;
 use Volt\Factory\State\NotPaidState;
 use Volt\Factory\State\PendingState;
 use Volt\Factory\State\SuccessState;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class StateFactory
 {
-    /**
-     * @var \Volt
-     */
     private $module;
-    /**
-     * @var OrderState
-     */
     private $orderState;
     private $configuration;
 
@@ -40,7 +37,7 @@ class StateFactory
 
     public function __construct(
         \Volt $module,
-        OrderState $orderState,
+        \OrderState $orderState,
         ConfigurationAdapter $configuration
     ) {
         $this->module = $module;
@@ -87,7 +84,7 @@ class StateFactory
     /**
      * @throws \Exception
      */
-    public function stateBuilder(string $type, OrderState $orderState, $moduleName = 'volt')
+    public function stateBuilder(string $type, \OrderState $orderState, $moduleName = 'volt')
     {
         \Configuration::updateValue('VOLT_CUSTOM_STATE', '1');
 
@@ -107,6 +104,7 @@ class StateFactory
             default:
                 throw new \Exception('Incorrect type when creating status for orders');
         }
+
         return $state;
     }
 
@@ -121,7 +119,7 @@ class StateFactory
     {
         if (!empty($name)) {
             foreach (\Language::getLanguages() as $lang) {
-                return OrderState::existsLocalizedNameInDatabase(
+                return \OrderState::existsLocalizedNameInDatabase(
                     $name[$lang['iso_code']],
                     (int) $lang['id_lang'],
                     \Tools::getIsset('id_order_state') ? (int) \Tools::getValue('id_order_state') : null

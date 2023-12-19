@@ -95,64 +95,20 @@ let config = {
 
 if (process.env.NODE_ENV === 'production') {
 	config.optimization = {
+		minimize: true,
 		minimizer: [
-			new TerserPlugin(
-
-					{
-						minify: TerserPlugin.uglifyJsMinify,
-						terserOptions: {
-							format: {
-								comments: false,
-							},
-						},
-						extractComments: "all",
-
-
-
-				//
-				// sourceMap: false,
-				// extractComments: false,
-				// uglifyOptions: {
-				// 	compress: {
-				// 		sequences: true,
-				// 		conditionals: true,
-				// 		booleans: true,
-				// 		if_return: true,
-				// 		join_vars: true,
-				// 		drop_console: true,
-				// 	},
-				// 	output: {
-				// 		beautify: false,
-				// 		comments: false,
-				// 		// comments: 'some',
-				// 		// preamble: METADATA,
-				// 	},
-				// 	mangle: { // see https://github.com/mishoo/UglifyJS2#mangle-options
-				// 		keep_fnames: false,
-				// 		toplevel: true,
-				// 	},
-				// }
-				}
-			)
+			new TerserPlugin()
 		]
 	}
 } else {
 	config.optimization = {
 		minimizer: [
-			new TerserPlugin({
-				terserOptions: {
-					format: {
-						comments: false,
-					},
-				},
-				extractComments: "all",
-
-			})
+			new TerserPlugin()
 		]
 	}
 }
-//
-config.mode = 'development';
+
+// config.mode = 'development';
 // config.mode = 'production';
 
 module.exports = config;

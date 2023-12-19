@@ -16,6 +16,10 @@ namespace Volt\Api;
 
 use Volt\Exception\ApiException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Client
 {
     private static $instance;
@@ -32,6 +36,7 @@ class Client
         if (!self::$instance) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 
@@ -79,6 +84,7 @@ class Client
      * @param bool $analyst
      *
      * @return mixed
+     *
      * @throws ApiException
      */
     public function request($method, $api_method, $body = null, bool $analyst = false)
@@ -98,55 +104,55 @@ class Client
         if (empty($this->api_password)) {
             throw new ApiException('Please configure API password');
         }
-        $this->ch = curl_init();
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+
+        curl_setopt($ch, CURLOPT_URL, $this->endpoint . $api_method);
+        curl_setopt($ch, CURLINFO_HEADER_OUT, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
         $authorization = $this->getToken();
 
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->ch, CURLOPT_HEADER, true);
-
-        curl_setopt($this->ch, CURLOPT_URL, $this->endpoint . $api_method);
-        curl_setopt($this->ch, CURLINFO_HEADER_OUT, true);
-        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $method);
-
         $api_headers = [
             "Authorization: Bearer {$authorization}",
-            'Content-Type:application/json',
+            "Content-Type: application/json",
         ];
 
         if ($analyst) {
             $api_headers[] = 'Volt-Partner-Attribution-Id: 78884f87-0171-4937-9d3c-99f36400c4c5';
         }
 
-        curl_setopt($this->ch, CURLOPT_HTTPHEADER, $api_headers);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $api_headers);
 
-        if ($body || is_array($body)) {
-            curl_setopt($this->ch, CURLOPT_POST, 1);
-            curl_setopt($this->ch, CURLOPT_POSTFIELDS, json_encode($body));
+        if ($body && is_array($body)) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
         }
 
         // SSL
-        curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
 
-        $response = curl_exec($this->ch);
+        $response = curl_exec($ch);
 
-        if (curl_errno($this->ch)) {
-            $exception_no = curl_errno($this->ch);
-            $exception = curl_error($this->ch);
+        if (curl_errno($ch)) {
+            $exception_no = curl_errno($ch);
+            $exception = curl_error($ch);
             throw new ApiException('Error (' . $exception_no . '):' . $exception);
         }
 
-        $header_size = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $response_body = substr($response, $header_size);
 
-        curl_close($this->ch);
-        $this->ch = null;
+        curl_close($ch);
+        $ch = null;
 
         return json_decode($response_body);
     }
 
-    public function getToken($customEndpoint = true, $method = 'oauth')
+    public function getToken($customEndpoint = false, $method = 'oauth')
     {
         $api_method = $method;
 
@@ -184,18 +190,26 @@ class Client
 
         curl_close($curl);
 
-        $resp = null;
+//        $resp = null;
+
 
         if ($error) {
-            echo 'Error: ' . $error;
+            \PrestaShopLogger::addLog('Volt - Error: ' . $error, 3);
         } else {
             $response = json_decode($response, true);
 
             if (array_key_exists('access_token', $response)) {
                 $resp = $response['access_token'];
             }
+
+            return $resp;
         }
 
-        return $resp;
+        return null;
     }
+
+
+
+
+
 }

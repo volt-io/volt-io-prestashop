@@ -49,8 +49,6 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
 
             $entityBody = \Tools::file_get_contents('php://input');
             $body = json_decode($entityBody, true);
-
-            $this->module->debug($body, 'payment1');
         }
 
         header('Content-Type: application/json');
@@ -63,14 +61,18 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
         $entityBody = \Tools::file_get_contents('php://input');
         $body = json_decode($entityBody, true);
 
-        $this->module->debug($body, 'payment2');
-
         $paymentId = $body['payment'] ?? null;
         $refundId = $body['refund'] ?? null;
         $state = $body['status'] ?? null;
 
         if ($paymentId && $state && $body) {
+
+            if(!$this->checkOrderVoltApi($paymentId)) {
+                return;
+            }
+
             $this->changeOrderState($paymentId, $state, $body);
+
             // Refund
             if ($refundId) {
                 $this->changeRefundState($refundId, $paymentId, $state, $body);
@@ -81,23 +83,37 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
         $this->ajaxRender(json_encode([], JSON_FORCE_OBJECT));
     }
 
+    private function checkOrderVoltApi($paymentId): bool
+    {
+        try {
+            $order = $this->module->api->request('GET', 'payments/' . urldecode($paymentId));
+            if ($order->id !== $paymentId) {
+                \PrestaShopLogger::addLog('Volt - Error: Wrong payment id notification' , 3);
+                return false;
+            }
+        } catch (\Exception $exception) {
+            \PrestaShopLogger::addLog($exception, 1);
+            return false;
+        }
+
+        return true;
+    }
+
     private function changeOrderState(string $paymentId, string $state, $body)
     {
         // get orderby payment id
         $orderState = $this->transitionRepository->getOrderStateByPaymentId($paymentId);
 
         if (
-            $orderState === 'PENDING' ||
-            $orderState === 'FAILURE' ||
-            $orderState === 'FAILED' ||
-            $orderState === 'SUCCESS' ||
-            $orderState === 'COMPLETED' ||
-            $orderState === 'REFUND_CONFIRMED'
+            $orderState === 'PENDING'
+            || $orderState === 'FAILURE'
+            || $orderState === 'FAILED'
+            || $orderState === 'SUCCESS'
+            || $orderState === 'COMPLETED'
+            || $orderState === 'REFUND_CONFIRMED'
         ) {
             $timestamp = $body['timestamp'] ?? null;
             $detailedStatus = $body['detailedStatus'] ?? null;
-
-            $this->module->debug($detailedStatus, 'detailedStatus');
 
             // Update status
             $this->transitionRepository->updateTransactionStatusByPaymentId(
@@ -108,8 +124,6 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
             );
             $orderId = $this->transitionRepository->getOrderIdByPaymentId($paymentId);
             $order = new \Order($orderId);
-
-            $this->module->debug($body, 'BODY');
 
             if ($state === 'RECEIVED' || $state === 'REFUND_CONFIRMED') {
                 $refund = $state === 'REFUND_CONFIRMED';
@@ -125,9 +139,9 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
         $refundState = $this->refundRepository->getOrderStateByRefundId($refundId);
 
         if (
-            $refundState === 'PENDING' ||
-            $refundState === 'FAILURE' ||
-            $refundState === 'SUCCESS'
+            $refundState === 'PENDING'
+            || $refundState === 'FAILURE'
+            || $refundState === 'SUCCESS'
         ) {
             // Update status
             $this->refundRepository->updateTransactionStatusByRefundId(

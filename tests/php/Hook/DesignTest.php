@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Volt\Tests\Hook;
 
-use Context;
-use Db;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Module;
 use Volt;
 use Volt\Tests\Mock\ConfigurationAdapterMock;
-use Volt\Util\Helper;
 
 class DesignTest extends MockeryTestCase
 {
@@ -34,20 +31,17 @@ class DesignTest extends MockeryTestCase
         $this->assertIsArray($given);
     }
 
-    public function testShouldThemeConfigurationValue ()
+    public function testShouldThemeConfigurationValue()
     {
-
         $shopId = 1;
 
         global $kernel;
-        if($kernel){
+        if ($kernel) {
             $kernel1 = $kernel;
-        }
-
-        else {
-            require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
-            $env = 'prod';//_PS_MODE_DEV_ ? 'dev' : 'prod';
-            $debug = false;//_PS_MODE_DEV_ ? true : false;
+        } else {
+            require_once _PS_ROOT_DIR_ . '/app/AppKernel.php';
+            $env = 'prod'; //_PS_MODE_DEV_ ? 'dev' : 'prod';
+            $debug = false; //_PS_MODE_DEV_ ? true : false;
             $kernel1 = new \AppKernel($env, $debug);
             $kernel1->boot();
         }

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace Volt\Factory\State;
 
-use OrderState;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class NotPaidState implements IState
 {
     /**
@@ -23,7 +26,7 @@ class NotPaidState implements IState
     private $moduleName;
 
     /**
-     * @var OrderState
+     * @var \OrderState
      */
     private $orderState;
 
@@ -35,8 +38,8 @@ class NotPaidState implements IState
     ];
 
     public function __construct(
-        OrderState $orderState,
-                   $configuration,
+        \OrderState $orderState,
+        $configuration,
         string $moduleName
     ) {
         $this->moduleName = $moduleName;
@@ -45,9 +48,9 @@ class NotPaidState implements IState
     }
 
     /**
-     * @return OrderState
+     * @return \OrderState
      */
-    public function create(): OrderState
+    public function create(): \OrderState
     {
         $name = [];
 

@@ -10,35 +10,30 @@
  * @copyright 2023, Volt Technologies Holdings Limited
  * @license   LICENSE.txt
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Volt\Tests\Repository;
 
 use PHPUnit\Framework\TestCase;
-use Volt\Entity\VoltRefunds;
-use Volt\Repository\RefundRepository;
 
 class RefundRepositoryTest extends TestCase
 {
-
     private $entityManager;
     private $refundRepository;
 
     public const TABLE = 'volt_refunds';
     public $dbPrefix = 'ps_';
 
-    protected function setUp()
-    :void
+    protected function setUp(): void
     {
-
         global $kernel;
         if ($kernel) {
             $kernel1 = $kernel;
         } // otherwise create it manually
         else {
-            require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
+            require_once _PS_ROOT_DIR_ . '/app/AppKernel.php';
             $env = 'prod'; //_PS_MODE_DEV_ ? 'dev' : 'prod';
-            $debug = false;//_PS_MODE_DEV_ ? true : false;
+            $debug = false; //_PS_MODE_DEV_ ? true : false;
             $kernel1 = new \AppKernel($env, $debug);
             $kernel1->boot();
         }
@@ -46,9 +41,8 @@ class RefundRepositoryTest extends TestCase
         $this->entityManager = $kernel1->getContainer()->get('doctrine')
             ->getManager();
 
-        $this->refundRepository = $kernel1->getContainer()->get("volt.repository.refund");
+        $this->refundRepository = $kernel1->getContainer()->get('volt.repository.refund');
         $this->testCreateRefund();
-
     }
 
     public function testCreateRefund()
@@ -84,7 +78,7 @@ class RefundRepositoryTest extends TestCase
     {
         $given = $this->refundRepository->getOrderIdByRefundId('888');
 
-        $this->assertEquals("999", $given);
+        $this->assertEquals('999', $given);
         $this->assertIsString($given);
     }
 
@@ -116,7 +110,7 @@ class RefundRepositoryTest extends TestCase
         $given = $this->refundRepository->getOrderStateByRefundId('888');
 
         $this->assertIsString($given);
-        $this->assertSame("SUCCESS", $given);
+        $this->assertSame('SUCCESS', $given);
     }
 
     public function testShouldGetOrderStateByRefundIdReturnFalse()
@@ -141,8 +135,7 @@ class RefundRepositoryTest extends TestCase
         $this->assertNull($given);
     }
 
-    protected function tearDown()
-    :void
+    protected function tearDown(): void
     {
         parent::tearDown();
 

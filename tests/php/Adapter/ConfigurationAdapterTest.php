@@ -1,22 +1,18 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Volt\Tests\Adapter;
 
 use PHPUnit\Framework\TestCase;
-use Volt;
 use Volt\Adapter\ConfigurationAdapter;
-use PrestaShop\PrestaShop\Adapter;
-use Module;
 
 class ConfigurationAdapterTest extends TestCase
 {
     private $configurationAdapter;
     private $container;
 
-    protected function setUp()
-    :void
+    protected function setUp(): void
     {
         $shopId = 1;
         $this->configurationAdapter = new ConfigurationAdapter($shopId);
@@ -26,9 +22,9 @@ class ConfigurationAdapterTest extends TestCase
             $kernel1 = $kernel;
         } // otherwise create it manually
         else {
-            require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
+            require_once _PS_ROOT_DIR_ . '/app/AppKernel.php';
             $env = 'prod'; //_PS_MODE_DEV_ ? 'dev' : 'prod';
-            $debug = false;//_PS_MODE_DEV_ ? true : false;
+            $debug = false; //_PS_MODE_DEV_ ? true : false;
             $kernel1 = new \AppKernel($env, $debug);
             $kernel1->boot();
         }

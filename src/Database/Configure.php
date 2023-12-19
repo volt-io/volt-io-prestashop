@@ -16,8 +16,11 @@ declare(strict_types=1);
 namespace Volt\Database;
 
 use Symfony\Component\Translation\TranslatorInterface;
-use Volt;
 use Volt\Adapter\ConfigurationAdapter;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class Configure
 {
@@ -36,7 +39,7 @@ class Configure
     protected $translator;
 
     public function __construct(
-        Volt $module,
+        \Volt $module,
         ConfigurationAdapter $configuration,
         TranslatorInterface $translator
     ) {
@@ -63,10 +66,6 @@ class Configure
     public function uninstall()
     {
         $res = true;
-//        $fields = Helper::getStyleFields();
-//        foreach ($fields as $field) {
-//            $res .= $this->configuration->delete($field);
-//        }
 
         return $res;
     }
@@ -99,7 +98,7 @@ class Configure
 
         $res &= $this->configuration->update(
             $this->name . '_ENV',
-            0,
+            '2',
             false,
             $group_id,
             $shop_id
@@ -212,7 +211,7 @@ class Configure
         /* Sets up Global configuration */
         $res &= $this->configuration->update(
             $this->name . '_ENV',
-            0
+            '2'
         );
         $res &= $this->configuration->update(
             $this->name . '_PROD_CLIENT_ID',
@@ -271,6 +270,7 @@ class Configure
             $this->name . '_FAILURE_STATE_ID',
             ''
         );
+
         return (bool) $res;
     }
 }

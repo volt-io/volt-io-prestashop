@@ -15,6 +15,10 @@ declare(strict_types=1);
 use Configuration as Cfg;
 use Volt\Util\Helper;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AdminVoltGeneralController extends ModuleAdminController
 {
     /**
@@ -87,7 +91,7 @@ class AdminVoltGeneralController extends ModuleAdminController
 
         $this->context->smarty->assign([
             'ps_version' => _PS_VERSION_,
-            'timer_start' => $this->timer_start,
+
             'iso_is_fr' => strtoupper($this->context->language->iso_code) == 'FR',
             'languages' => Language::getLanguages(),
             'currentPage' => $currentPage,
@@ -120,7 +124,7 @@ class AdminVoltGeneralController extends ModuleAdminController
                         ],
                         [
                             'id' => 'active_off',
-                            'value' => 0,
+                            'value' => 2,
                             'label' => $this->l('Set Sandbox environment'),
                         ],
                     ],
@@ -142,7 +146,7 @@ class AdminVoltGeneralController extends ModuleAdminController
                         ],
                         [
                             'id' => 'active_off',
-                            'value' => 0,
+                            'value' => 2,
                             'label' => $this->l('Configure Sandbox credentials'),
                         ],
                     ],

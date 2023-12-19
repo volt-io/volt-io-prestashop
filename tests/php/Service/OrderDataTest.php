@@ -1,25 +1,16 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Volt\Tests\Service;
 
-use Context;
-use Db;
 use PHPUnit\Framework\TestCase;
-use Module;
-use Currency;
-use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
-use Symfony\Component\Translation\TranslatorInterface;
 use Volt\Service\OrderData;
 
 class OrderDataTest extends TestCase
 {
-
-    protected function setUp()
-    :void
+    protected function setUp(): void
     {
-
         $address = $this->getMockBuilder(\AddressCore::class)
             ->disableOriginalConstructor()
             ->enableOriginalClone()
@@ -47,7 +38,7 @@ class OrderDataTest extends TestCase
         $link->expects($this->any())->method('getModuleLink')->willReturn('test');
 
         $context->cart = ['id' => '1'];
-        $context->customer = (object)['id' => 11, 'secure_key' => 123123];
+        $context->customer = (object) ['id' => 11, 'secure_key' => 123123];
         $context->currency = ['iso_code' => 'USD'];
         $context->link = $link;
 
@@ -56,12 +47,10 @@ class OrderDataTest extends TestCase
             $customer,
             $context
         );
-
     }
 
     public function testShouldGetReferenceNumber()
     {
-
         $cart = $this->getMockBuilder(\Cart::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -70,12 +59,10 @@ class OrderDataTest extends TestCase
         $given = $this->orderData->generateReference($cart);
 
         $this->assertIsString($given);
-
     }
 
     public function testGetDataArray()
     {
-
         $cart = $this->getMockBuilder(\Cart::class)
             ->disableOriginalConstructor()
             ->enableOriginalClone()
@@ -94,5 +81,4 @@ class OrderDataTest extends TestCase
         $this->assertArrayHasKey('uniqueReference', $given, "Array doesn't contains 'uniqueReference'");
         $this->assertArrayHasKey('payer', $given, "Array doesn't contains 'payer'");
     }
-
 }

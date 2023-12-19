@@ -21,8 +21,7 @@ class ConfigurationAdapterMock extends ConfigurationAdapter
         return $this->data[$key] ?? false;
     }
 
-    public function update($key, $values, $html = false, $idShopGroup = null, $idShop = null)
-    :bool
+    public function update($key, $values, $html = false, $idShopGroup = null, $idShop = null): bool
     {
         // Simple registration, we don't take care about multi lang values etc.
         $this->data[$key] = $values;
@@ -32,19 +31,17 @@ class ConfigurationAdapterMock extends ConfigurationAdapter
         //        return true;
     }
 
-    public function delete($key)
-    :bool
+    public function delete($key): bool
     {
-
         //        unset($this->data[$key]);
 
         $val = $this->data[$key] ?? false;
         unset($this->data[$key]);
-        return (bool)$val;
+
+        return (bool) $val;
 
         //        dump($key);
 
         //        return true;
     }
-
 }

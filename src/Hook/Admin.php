@@ -17,6 +17,10 @@ namespace Volt\Hook;
 
 use Volt\Service\RefundOrder;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Admin extends AbstractHook
 {
     private $_errors = [];
@@ -91,10 +95,8 @@ class Admin extends AbstractHook
                 $refund = false;
 
                 try {
-                    $test = new RefundOrder($this->module);
-                    $refund = $test->requestRefund($transaction['crc'], $refundType, $totalAmount);
-
-                    $this->module->debug($refund, 'REFUND');
+                    $refunding = new RefundOrder($this->module);
+                    $refund = $refunding->requestRefund($transaction['crc'], $refundType, $totalAmount);
                 } catch (\Exception $exception) {
                     $this->_errors[] = $this->module->l('Refund error: ') . $exception;
                     \PrestaShopLogger::addLog($exception, 3);
@@ -125,9 +127,8 @@ class Admin extends AbstractHook
 
     public function isRefundable($transaction)
     {
-        $this->module->debug($transaction, 'refundTransaction');
-
         $refundSevice = new RefundOrder($this->module);
+
         return $refundSevice->checkIsRefundActive($transaction['crc']);
     }
 }

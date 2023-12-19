@@ -40,7 +40,7 @@
 	<div class="col-lg-10">
 
         {if isset($fields.title)}
-			<h3>{$fields.title}</h3>
+			<h3>{$fields.title|escape:'html':'UTF-8'}</h3>
         {/if}
 
         {block name="defaultForm"}
@@ -55,16 +55,16 @@
             {/if}
 
             {assign var='table_bk' value=$table scope='parent'}
-			<form autocomplete="off" id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if isset($smarty.capture.table_count) && $smarty.capture.table_count}_{$smarty.capture.table_count|intval}{/if}{/if}"
-			      class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if}
-			      method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
+			<form autocomplete="off" id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table|escape:'html':'UTF-8'}_form{/if}{if isset($smarty.capture.table_count) && $smarty.capture.table_count}_{$smarty.capture.table_count|intval}{/if}{/if}"
+			      class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller|escape:'html':'UTF-8'}{/if}"{if isset($current) && $current} action="{$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if}
+			      method="post" enctype="multipart/form-data"{if isset($style)} style="{$style|escape:'html':'UTF-8'}"{/if} novalidate>
                 {if $form_id}
-					<input type="hidden" name="{$identifier}"
-					       id="{$identifier}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}"
-					       value="{$form_id}"/>
+					<input type="hidden" name="{$identifier|escape:'html':'UTF-8'}"
+					       id="{$identifier|escape:'html':'UTF-8'}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}"
+					       value="{$form_id|escape:'html':'UTF-8'}"/>
                 {/if}
                 {if !empty($submit_action)}
-					<input type="hidden" name="{$submit_action}" value="1"/>
+					<input type="hidden" name="{$submit_action|escape:'html':'UTF-8'}" value="1"/>
                 {/if}
                 {$tabkey = 0}
 
@@ -74,26 +74,26 @@
 
 
                         {if $tabkey == 0 || $tabkey == 1 || $tabkey == 3}
-							<div id="tab_rule_{$tabkey}" class="{$submit_action} tab_rule_tab ">
+							<div id="tab_rule_{$tabkey|escape:'html':'UTF-8'}" class="{$submit_action|escape:'html':'UTF-8'} tab_rule_tab ">
                         {/if}
 
                         {block name="fieldset"}
                             {capture name='fieldset_name'}{counter name='fieldset_name'}{/capture}
 							<div class="panel"
-							     id="fieldset_{$f}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}{if $smarty.capture.fieldset_name > 1}_{($smarty.capture.fieldset_name - 1)|intval}{/if}">
+							     id="fieldset_{$f|escape:'html':'UTF-8'}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}{if $smarty.capture.fieldset_name > 1}_{($smarty.capture.fieldset_name - 1)|intval}{/if}">
                                 {foreach $fieldset.form as $key => $field}
 
                                     {if $key == 'legend'}
                                         {block name="legend"}
 											<div class="panel-heading">
-                                                {if isset($field.image) && isset($field.title)}<img src="{$field.image}"
+                                                {if isset($field.image) && isset($field.title)}<img src="{$field.image|escape:'html':'UTF-8'}"
 												                                                    alt="{$field.title|escape:'html':'UTF-8'}" />{/if}
-                                                {if isset($field.icon)}<i class="{$field.icon}"></i>{/if}
-                                                {$field.title}
+                                                {if isset($field.icon)}<i class="{$field.icon|escape:'html':'UTF-8'}"></i>{/if}
+                                                {$field.title|escape:'html':'UTF-8'}
 											</div>
                                         {/block}
                                     {elseif $key == 'description' && $field}
-										<!-- <div class="alert alert-info">{$field}</div> -->
+										{$field|escape:'html':'UTF-8'}
                                     {elseif $key == 'input'}
 
                                         {foreach $field as $input}
@@ -108,7 +108,7 @@
 
                                                     {if $form_key === 'legend'}
 														<div class="section-heading">
-                                                            {$form_subgroup_input.title}
+                                                            {$form_subgroup_input.title|escape:'html':'UTF-8'}
 														</div>
                                                     {elseif $form_key === 'input'}
 
@@ -138,30 +138,30 @@
                                             {if isset($fieldset['form']['submit']) && !empty($fieldset['form']['submit'])}
 												<button type="submit" value="1"
                                                         {if isset($fieldset['form']['submit']['save_event']) && !empty($fieldset['form']['submit']['save_event'])}
-															data-save-event="{$fieldset['form']['submit']['save_event']}"
+															data-save-event="{$fieldset['form']['submit']['save_event']|escape:'html':'UTF-8'}"
                                                         {/if}
-														id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn{/if}{if $smarty.capture.form_submit_btn > 1}_{($smarty.capture.form_submit_btn - 1)|intval}{/if}"
-														name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}"
-														class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-primary pull-right{/if}">
-                                                    {$fieldset['form']['submit']['title']}
+														id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']|escape:'html':'UTF-8'}{else}{$table|escape:'html':'UTF-8'}_form_submit_btn{/if}{if $smarty.capture.form_submit_btn > 1}_{($smarty.capture.form_submit_btn - 1)|intval}{/if}"
+														name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']|escape:'html':'UTF-8'}{else}{$submit_action|escape:'html':'UTF-8'}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}"
+														class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']|escape:'html':'UTF-8'}{else}btn btn-primary pull-right{/if}">
+                                                    {$fieldset['form']['submit']['title']|escape:'html':'UTF-8'}
 												</button>
                                             {/if}
 
                                             {if isset($fieldset['form']['buttons'])}
                                                 {foreach from=$fieldset['form']['buttons'] item=btn key=k}
                                                     {if isset($btn.href) && trim($btn.href) != ''}
-														<a href="{$btn.href}"
-                                                           {if isset($btn['id'])}id="{$btn['id']}"{/if}
-														   class="btn btn-primary{if isset($btn['class'])} {$btn['class']}{/if}" {if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}
-																<i class="{$btn['icon']}"></i>
-                                                            {/if}{$btn.title}</a>
+														<a href="{$btn.href|escape:'html':'UTF-8'}"
+                                                           {if isset($btn['id'])}id="{$btn['id']|escape:'html':'UTF-8'}"{/if}
+														   class="btn btn-primary{if isset($btn['class'])} {$btn['class']|escape:'html':'UTF-8'}{/if}" {if isset($btn.js) && $btn.js} onclick="{$btn.js|escape:'html':'UTF-8'}"{/if}>{if isset($btn['icon'])}
+																<i class="{$btn['icon']|escape:'html':'UTF-8'}"></i>
+                                                            {/if}{$btn.title|escape:'html':'UTF-8'}</a>
                                                     {else}
 														<button type="button"
-                                                                {if isset($btn['id'])}id="{$btn['id']}"{/if}
-														        class="btn btn-primary{if isset($btn['class'])} {$btn['class']}{/if}"
-														        name="{if isset($btn['name'])}{$btn['name']}{else}submitOptions{$table}{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}
-																<i class="{$btn['icon']}"></i>
-                                                            {/if}{$btn.title}
+                                                                {if isset($btn['id'])}id="{$btn['id']|escape:'html':'UTF-8'}"{/if}
+														        class="btn btn-primary{if isset($btn['class'])} {$btn['class']|escape:'html':'UTF-8'}{/if}"
+														        name="{if isset($btn['name'])}{$btn['name']|escape:'html':'UTF-8'}{else}submitOptions{$table}{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js|escape:'html':'UTF-8'}"{/if}>{if isset($btn['icon'])}
+																<i class="{$btn['icon']|escape:'html':'UTF-8'}"></i>
+                                                            {/if}{$btn.title|escape:'html':'UTF-8'}
 														</button>
                                                     {/if}
                                                 {/foreach}
@@ -217,16 +217,16 @@
 
     {if $firstCall}
 		<script type="text/javascript">
-			var module_dir = '{$smarty.const._MODULE_DIR_}';
+			var module_dir = '{$smarty.const._MODULE_DIR_|escape:'html':'UTF-8'}';
 			var id_language = {$defaultFormLanguage|intval};
 			var languages = new Array();
 
             {foreach $languages as $k => $language}
 			languages[{$k}] = {
-				id_lang: {$language.id_lang},
-				iso_code: '{$language.iso_code}',
-				name: '{$language.name}',
-				is_default: '{$language.is_default}'
+				id_lang: {$language.id_lang|escape:'html':'UTF-8'},
+				iso_code: '{$language.iso_code|escape:'html':'UTF-8'}',
+				name: '{$language.name|escape:'html':'UTF-8'}',
+				is_default: '{$language.is_default|escape:'html':'UTF-8'}'
 			};
             {/foreach}
 
@@ -251,12 +251,11 @@
     {/if}
 
 	<script type="text/javascript">
-			let volt_ajax = "{$ajax_controller}";
-			let volt_token = "{$ajax_token}";
+			let volt_ajax = "{$ajax_controller|escape:'html':'UTF-8'}";
+			let volt_token = "{$ajax_token|escape:'html':'UTF-8'}";
 
 			let success_msg = "{l s='Configuration saved successfully' mod='volt'}"
 			let error_msg = "{l s='Error, configuration not saved' mod='volt'}"
-
 
 			$(document).ready(function () {
 				$('#configuration_form').on('submit', function (e) {
@@ -282,63 +281,31 @@
 					});
 				});
 
-				var voltEnv = $("input[name=VOLT_ENV_SWITCH]");
-				var voltEnvValue = $("input[name=VOLT_ENV_SWITCH]:checked").val();
+				var $voltEnvSwitch = $("input[name=VOLT_ENV_SWITCH]");
 
-				function checkVoltEnv(state) {
+				function toggleElements(isProd) {
+					var prodElements = ['.VOLT_PROD_CLIENT_ID', '.VOLT_PROD_CLIENT_SECRET', '.VOLT_PROD_USERNAME', '.VOLT_PROD_PASSWORD', '.VOLT_PROD_NOTIFICATION_SECRET', '.VOLT_PROD_CLIENT_CREDENTIALS', '.VOLT_PROD_CUSTOMER_CREDENTIALS'];
+					var sandboxElements = ['.VOLT_SANDBOX_CLIENT_ID', '.VOLT_SANDBOX_CLIENT_SECRET', '.VOLT_SANDBOX_USERNAME', '.VOLT_SANDBOX_PASSWORD', '.VOLT_SANDBOX_NOTIFICATION_SECRET', '.VOLT_SANDBOX_CLIENT_CREDENTIALS', '.VOLT_SANDBOX_CUSTOMER_CREDENTIALS'];
 
-					console.log(state);
-					console.log('test');
+					prodElements.forEach(function (element) {
+						$(element).toggle(isProd);
+					});
 
-					if (state === '0') {
-
-
-
-						$('.VOLT_SANDBOX_CLIENT_ID').hide();
-						$('.VOLT_SANDBOX_CLIENT_SECRET').hide();
-						$('.VOLT_SANDBOX_USERNAME').hide();
-						$('.VOLT_SANDBOX_PASSWORD').hide();
-						$('.VOLT_SANDBOX_NOTIFICATION_SECRET').hide();
-
-						$('.VOLT_SANDBOX_CLIENT_CREDENTIALS').hide();
-						$('.VOLT_SANDBOX_CUSTOMER_CREDENTIALS').hide();
-
-						$('.VOLT_PROD_CLIENT_ID').show();
-						$('.VOLT_PROD_CLIENT_SECRET').show();
-						$('.VOLT_PROD_USERNAME').show();
-						$('.VOLT_PROD_PASSWORD').show();
-						$('.VOLT_PROD_NOTIFICATION_SECRET').show();
-
-						$('.VOLT_PROD_CLIENT_CREDENTIALS').show();
-						$('.VOLT_PROD_CUSTOMER_CREDENTIALS').show();
-
-
-					} else {
-						$('.VOLT_SANDBOX_CLIENT_ID').show();
-						$('.VOLT_SANDBOX_CLIENT_SECRET').show();
-						$('.VOLT_SANDBOX_USERNAME').show();
-						$('.VOLT_SANDBOX_PASSWORD').show();
-						$('.VOLT_SANDBOX_NOTIFICATION_SECRET').show();
-
-						$('.VOLT_SANDBOX_CLIENT_CREDENTIALS').show();
-						$('.VOLT_SANDBOX_CUSTOMER_CREDENTIALS').show();
-
-						$('.VOLT_PROD_CLIENT_ID').hide();
-						$('.VOLT_PROD_CLIENT_SECRET').hide();
-						$('.VOLT_PROD_USERNAME').hide();
-						$('.VOLT_PROD_PASSWORD').hide();
-						$('.VOLT_PROD_NOTIFICATION_SECRET').hide();
-
-						$('.VOLT_PROD_CLIENT_CREDENTIALS').hide();
-						$('.VOLT_PROD_CUSTOMER_CREDENTIALS').hide();
-					}
+					sandboxElements.forEach(function (element) {
+						$(element).toggle(!isProd);
+					});
 				}
 
+				function checkVoltEnv(state) {
+					toggleElements(state === '2');
+				}
+
+				var voltEnvValue = $voltEnvSwitch.filter(':checked').val();
 				checkVoltEnv(voltEnvValue);
 
-				$("input[name=VOLT_ENV_SWITCH]").click(function () {
+				$voltEnvSwitch.on('change', function () {
 					checkVoltEnv($(this).val());
-				})
+				});
 
 			});
 

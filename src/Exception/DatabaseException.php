@@ -15,6 +15,10 @@ declare(strict_types=1);
 
 namespace Volt\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class DatabaseException extends \Exception
 {
 }

@@ -21,18 +21,23 @@ addEventListener("resize", (event) => {
 
 export function radioPayments() {
 
-    // if (checkedIfOnePaymentMethod) {
-    //     if(paymentOptions) {
-    //         console.log('show payment')
-    //         setTimeout(() => {
-    //             paymentOption(paymentOptions[0])
-    //             const additionalInformation = document.querySelector<HTMLDivElement>('#payment-option-1-additional-information');
-    //             if (additionalInformation) {
-    //                 additionalInformation.style.display = 'block';
-    //             }
-    //         },550)
-    //     }
-    // }
+
+    // console.log(document.querySelector('[data-module-name="volt"]').checked);
+
+
+
+    // console.log(isVoltModuleChecked());
+
+
+    if (isVoltModuleChecked()) {
+        setTimeout(() => {
+            paymentOption(document.querySelector('[data-module-name="volt"]'))
+            const additionalInformation = document.querySelector<HTMLDivElement>('#payment-option-1-additional-information');
+            if (additionalInformation) {
+                additionalInformation.style.display = 'block';
+            }
+        },250)
+    }
 
     let paymentInput = document.querySelector<HTMLInputElement>('input[data-module-name="volt"]')
 
@@ -48,6 +53,15 @@ export function radioPayments() {
     }
 }
 
+function isVoltModuleChecked() {
+    const voltElement = document.querySelector('[data-module-name="volt"]');
+
+    if (voltElement && voltElement instanceof HTMLInputElement) {
+        return voltElement.checked;
+    } else {
+        return false;
+    }
+}
 
 function paymentOption(formRadioId: HTMLInputElement) {
     if(formRadioId) {
@@ -55,9 +69,9 @@ function paymentOption(formRadioId: HTMLInputElement) {
     }
 }
 
-function checkedIfOnePaymentMethod(paymentOptions: Array<HTMLInputElement>): boolean {
-    return paymentOptions && paymentOptions.length === 1
-}
+// function checkedIfOnePaymentMethod(paymentOptions: Array<HTMLInputElement>): boolean {
+//     return paymentOptions && paymentOptions.length === 1
+// }
 
 resetForm(getVoltPaymentElement());
 

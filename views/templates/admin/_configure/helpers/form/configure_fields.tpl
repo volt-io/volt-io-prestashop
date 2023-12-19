@@ -10,24 +10,28 @@
  * @license   LICENSE.txt
  *}
 {block name="input_row"}
-	<div class="form-group {$_input.name}{if isset($_input.form_group_class)} {$_input.form_group_class}{/if}"{if $_input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}{if isset($tabs) && isset($_input.tab)} data-tab-id="{$_input.tab}"{/if}>
+	<div class="form-group {$_input.name|escape:'html':'UTF-8'}{if isset($_input.form_group_class)} {$_input.form_group_class|escape:'html':'UTF-8'}{/if}"{if $_input.name == 'id_state'}
+		id="contains_states"{if !$contains_states}
+		style="display:none;"{/if}{/if}{if isset($tabs) && isset($_input.tab)}
+	data-tab-id="{$_input.tab|escape:'html':'UTF-8'}"{/if}>
         {if $_input.type == 'hidden'}
-			<input type="hidden" name="{$_input.name}" id="{$_input.name}"
-			       value="{$fields_value[$_input.name]|escape:'html':'UTF-8'}"/>
+			<input type="hidden" name="{$_input.name|escape:'html':'UTF-8'}" id="{$_input.name|escape:'html':'UTF-8'}"
+			       value="{$fields_value[$_input.name|escape:'html':'UTF-8']|escape:'html':'UTF-8'}"/>
         {elseif $_input.type == 'description'}
 			<div class="infoheading_class col-sm-12">
-                {assign var=desc_template value=$_input.content}
+                {assign var=desc_template value=$_input.content|escape:'html':'UTF-8'}
                 {include file="$desc_template"}
 			</div>
         {elseif $_input.type == 'infoheading'}
 	       <div class="control-label text-left text-lg-right col-xs-12 col-lg-3"></div>
 			<div class="header-section col-xs-12 col-lg-5">
-				{$_input.label}
+				{$_input.label|escape:'html':'UTF-8'}
 			</div>
         {else}
             {block name="label"}
                 {if isset($_input.label)}
-					<label class="control-label text-left text-lg-right col-xs-12 col-lg-3{if isset($_input.required) && $_input.required} required{/if}">
+					<label class="control-label text-left text-lg-right col-xs-12 col-lg-3
+	{if isset($_input.required) && $_input.required} required{/if}">
                         {if isset($_input.hint)}
 						<span class="label-tooltip"
 						      data-toggle="tooltip" data-html="true"
@@ -43,10 +47,10 @@
 											{$_input.hint|escape:'html':'UTF-8'}
 										{/if}">
 									{/if}
-                            {$_input.label}
+                            {$_input.label|escape:'html':'UTF-8'}
                             {if isset($_input.doc)}
 								<span class="doc_class">
-									<a target="_blank" href="{$_input.doc}">?</a>
+									<a target="_blank" href="{$_input.doc|escape:'html':'UTF-8'}">?</a>
 								</span>
                             {/if}
                             {if isset($_input.hint)}
@@ -67,47 +71,47 @@
 
                                 {foreach $languages as $language}
                                     {if isset($fields_value[$_input.name][$language.id_lang])}
-                                        {assign var='value_text' value=$fields_value[$_input.name][$language.id_lang]}
+                                        {assign var='value_text' value=$fields_value[$_input.name|escape:'html':'UTF-8'][$language.id_lang|escape:'html':'UTF-8']}
                                     {else}
                                         {assign var='value_text' value=""}
                                     {/if}
 
                                     {if $languages|count > 1}
-										<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
+										<div class="translatable-field lang-{$language.id_lang|escape:'html':'UTF-8'}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
 										<div class="col-lg-9">
                                     {/if}
 
 	                                {if isset($_input.maxchar) || isset($_input.prefix) || isset($_input.suffix)}
-										<div class="input-group{if isset($_input.class)} {$_input.class}{/if}">
+										<div class="input-group{if isset($_input.class|escape:'html':'UTF-8')} {$_input.class|escape:'html':'UTF-8'}{/if}">
 	                                {/if}
                                     {if isset($_input.maxchar)}
-										<span id="{if isset($_input.id)}{$_input.id}_{$language.id_lang}{else}{$_input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
-											<span class="text-count-down">{$_input.maxchar}</span>
+										<span id="{if isset($_input.id)}{$_input.id|escape:'html':'UTF-8'}_{$language.id_lang|escape:'html':'UTF-8'}{else}{$_input.name|escape:'html':'UTF-8'}_{$language.id_lang|escape:'html':'UTF-8'}{/if}_counter" class="input-group-addon">
+											<span class="text-count-down">{$_input.maxchar|escape:'html':'UTF-8'}</span>
 										</span>
                                     {/if}
                                     {if isset($_input.prefix)}
 										<span class="input-group-addon">
-											{$_input.prefix}
+											{$_input.prefix|escape:'html':'UTF-8'}
 										</span>
                                     {/if}
 
 									<input type="text"
-									       id="{if isset($_input.id)}{$_input.id}_{$language.id_lang}{else}{$_input.name}_{$language.id_lang}{/if}"
-									       name="{$_input.name}_{$language.id_lang}"
-									       class="{if isset($_input.class)}{$_input.class}{/if}"
+									       id="{if isset($_input.id)}{$_input.id|escape:'html':'UTF-8'}_{$language.id_lang|escape:'html':'UTF-8'}{else}{$_input.name|escape:'html':'UTF-8'}_{$language.id_lang|escape:'html':'UTF-8'}{/if}"
+									       name="{$_input.name|escape:'html':'UTF-8'}_{$language.id_lang|escape:'html':'UTF-8'}"
+									       class="{if isset($_input.class)}{$_input.class|escape:'html':'UTF-8'}{/if}"
 									       value="{if isset($_input.string_format) && $_input.string_format}{if isset($value_text) && !empty($value_text)}{$value_text|string_format:$_input.string_format|escape:'html':'UTF-8'}{else}{if isset($_input.default_val) && !empty($_input.default_val)}{$_input.default_val|string_format:$_input.string_format|escape:'html':'UTF-8'}{/if}{/if}{else}{if isset($value_text) && !empty($value_text)}{$value_text|escape:'html':'UTF-8'}{else}{if isset($_input.default_val) && !empty($_input.default_val)}{$_input.default_val|escape:'html':'UTF-8'}{/if}{/if}{/if}"
 									       onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
-                                            {if isset($_input.size)} size="{$_input.size}"{/if}
-                                            {if isset($_input.maxchar)} data-maxchar="{$_input.maxchar}"{/if}
-                                            {if isset($_input.maxlength)} maxlength="{$_input.maxlength}"{/if}
+                                            {if isset($_input.size)} size="{$_input.size|escape:'html':'UTF-8'}"{/if}
+                                            {if isset($_input.maxchar)} data-maxchar="{$_input.maxchar|escape:'html':'UTF-8'}"{/if}
+                                            {if isset($_input.maxlength)} maxlength="{$_input.maxlength|escape:'html':'UTF-8'}"{/if}
                                             {if isset($_input.readonly) && $_input.readonly} readonly="readonly"{/if}
                                             {if isset($_input.disabled) && $_input.disabled} disabled="disabled"{/if}
                                             {if isset($_input.autocomplete) && !$_input.autocomplete} autocomplete="off"{/if}
                                             {if isset($_input.required) && $_input.required} required="required" {/if}
-                                            {if isset($_input.placeholder) && $_input.placeholder} placeholder="{$_input.placeholder}"{/if} />
+                                            {if isset($_input.placeholder) && $_input.placeholder} placeholder="{$_input.placeholder|escape:'html':'UTF-8'}"{/if} />
 		                                    {if isset($_input.suffix)}
 												<span class="input-group-addon">
-													{$_input.suffix}
+													{$_input.suffix|escape:'html':'UTF-8'}
 												</span>
 		                                    {/if}
 
@@ -123,15 +127,15 @@
 											        class="btn btn-default dropdown-toggle"
 											        tabindex="-1"
 											        data-toggle="dropdown">
-                                                {$language.iso_code}
+                                                {$language.iso_code|escape:'html':'UTF-8'}
 												<i class="icon-caret-down"></i>
 											</button>
 
 											<ul class="dropdown-menu">
                                                 {foreach from=$languages item=language}
 													<li>
-														<a href="javascript:hideOtherLanguage({$language.id_lang});"
-														   tabindex="-1">{$language.name}</a>
+														<a href="javascript:hideOtherLanguage({$language.id_lang|escape:'html':'UTF-8'});"
+														   tabindex="-1">{$language.name|escape:'html':'UTF-8'}</a>
 													</li>
                                                 {/foreach}
 											</ul>
@@ -142,7 +146,7 @@
 										</div>
                                         {if isset($_input.help)}
 											<div class="col-lg-12">
-												<p class="help-text">{$_input.help}</p>
+												<p class="help-text">{$_input.help|escape:'html':'UTF-8'}</p>
 											</div>
                                         {/if}
 										</div>
@@ -155,39 +159,39 @@
                                 {/if}
                             {else}
 
-                                {assign var='value_text' value=$fields_value[$_input.name]}
+                                {assign var='value_text' value=$fields_value[$_input.name|escape:'html':'UTF-8']}
                                 {if isset($_input.maxchar) || isset($_input.prefix) || isset($_input.suffix)}
-									<div class="input-group{if isset($_input.class)} {$_input.class}{/if}">
+									<div class="input-group{if isset($_input.class)} {$_input.class|escape:'html':'UTF-8'}{/if}">
                                 {/if}
 
                                 {if isset($_input.prefix)}
 									<span class="input-group-addon">
-										  {$_input.prefix}
+										  {$_input.prefix|escape:'html':'UTF-8'}
 										</span>
                                 {/if}
 								<input type="text"
-								       name="{$_input.name}"
-								       id="{if isset($_input.id)}{$_input.id}{else}{$_input.name}{/if}"
+								       name="{$_input.name|escape:'html':'UTF-8'}"
+								       id="{if isset($_input.id)}{$_input.id|escape:'html':'UTF-8'}{else}{$_input.name|escape:'html':'UTF-8'}{/if}"
 								       value="{if isset($_input.string_format) && $_input.string_format}{if isset($value_text) && !empty($value_text)}{$value_text|string_format:$_input.string_format|escape:'html':'UTF-8'}{else}{if isset($_input.default_val) && !empty($_input.default_val)}{$_input.default_val|string_format:$_input.string_format|escape:'html':'UTF-8'}{/if}{/if}{else}{if isset($value_text) && !empty($value_text)}{$value_text|escape:'html':'UTF-8'}{else}{if isset($_input.default_val) && !empty($_input.default_val)}{$_input.default_val|escape:'html':'UTF-8'}{/if}{/if}{/if}"
-								       class="{if isset($_input.class)}{$_input.class}{/if}"
-                                        {if isset($_input.size)} size="{$_input.size}"{/if}
-                                        {if isset($_input.maxchar)} data-maxchar="{$_input.maxchar}"{/if}
-                                        {if isset($_input.maxlength)} maxlength="{$_input.maxlength}"{/if}
+								       class="{if isset($_input.class)}{$_input.class|escape:'html':'UTF-8'}{/if}"
+                                        {if isset($_input.size)} size="{$_input.size|escape:'html':'UTF-8'}"{/if}
+                                        {if isset($_input.maxchar)} data-maxchar="{$_input.maxchar|escape:'html':'UTF-8'}"{/if}
+                                        {if isset($_input.maxlength)} maxlength="{$_input.maxlength|escape:'html':'UTF-8'}"{/if}
                                         {if isset($_input.readonly) && $_input.readonly} readonly="readonly"{/if}
                                         {if isset($_input.disabled) && $_input.disabled} disabled="disabled"{/if}
                                         {if isset($_input.autocomplete) && !$_input.autocomplete} autocomplete="off"{/if}
                                         {if isset($_input.required) && $_input.required } required="required" {/if}
-                                        {if isset($_input.placeholder) && $_input.placeholder } placeholder="{$_input.placeholder}"{/if}
+                                        {if isset($_input.placeholder) && $_input.placeholder } placeholder="{$_input.placeholder|escape:'html':'UTF-8'}"{/if}
 								/>
 
                                 {if isset($_input.suffix)}
 									<span class="input-group-addon">
-										  {$_input.suffix}
+										  {$_input.suffix|escape:'html':'UTF-8'}
 										</span>
                                 {/if}
 
                                 {if isset($_input.help)}
-									<p class="help-text">{$_input.help}</p>
+									<p class="help-text">{$_input.help|escape:'html':'UTF-8'}</p>
                                 {/if}
 
                                 {if isset($_input.maxchar) || isset($_input.prefix) || isset($_input.suffix)}
@@ -199,7 +203,7 @@
 
                         {elseif $_input.type == 'select'}
                             {if isset($_input.options.query) && !$_input.options.query && isset($_input.empty_message)}
-                                {$_input.empty_message}
+                                {$_input.empty_message|escape:'html':'UTF-8'}
                                 {$_input.required = false}
                                 {$_input.desc = null}
                             {else}
@@ -215,9 +219,9 @@
                                     {if isset($_input.options.optiongroup)}
                                         {foreach $_input.options.optiongroup.query AS $optiongroup}
 											<optgroup
-													label="{$optiongroup[$_input.options.optiongroup.label]}">
+													label="{$optiongroup[$_input.options.optiongroup.label]|escape:'html':'UTF-8'}">
                                                 {foreach $optiongroup[$_input.options.options.query] as $option}
-													<option value="{$option[$_input.options.options.id]}"
+													<option value="{$option[$_input.options.options.id]|escape:'html':'UTF-8'}"
                                                             {if isset($_input.multiple)}
                                                                 {foreach $fields_value[$_input.name] as $field_value}
                                                                     {if $field_value == $option[$_input.options.options.id]}selected="selected"{/if}
@@ -225,14 +229,14 @@
                                                             {else}
                                                                 {if $fields_value[$_input.name] == $option[$_input.options.options.id]}selected="selected"{/if}
                                                             {/if}
-													>{$option[$_input.options.options.name]}</option>
+													>{$option[$_input.options.options.name]|escape:'html':'UTF-8'}</option>
                                                 {/foreach}
 											</optgroup>
                                         {/foreach}
                                     {else}
                                         {foreach $_input.options.query AS $option}
                                             {if is_object($option)}
-												<option value="{$option->$_input.options.id}"
+												<option value="{$option->$_input.options.id|escape:'html':'UTF-8'}"
                                                         {if isset($_input.multiple)}
                                                             {foreach $fields_value[$_input.name] as $field_value}
                                                                 {if $field_value == $option->$_input.options.id}
@@ -244,11 +248,11 @@
 																selected="selected"
                                                             {/if}
                                                         {/if}
-												>{$option->$_input.options.name}</option>
+												>{$option->$_input.options.name|escape:'html':'UTF-8'}</option>
                                             {elseif $option == "-"}
 												<option value="">-</option>
                                             {else}
-												<option value="{$option[$_input.options.id]}"
+												<option value="{$option[$_input.options.id]|escape:'html':'UTF-8'}"
                                                         {if isset($_input.multiple)}
                                                             {foreach $fields_value[$_input.name] as $field_value}
                                                                 {if $field_value == $option[$_input.options.id]}
@@ -260,7 +264,7 @@
 																selected="selected"
                                                             {/if}
                                                         {/if}
-												>{$option[$_input.options.name]}</option>
+												>{$option[$_input.options.name]|escape:'html':'UTF-8'}</option>
                                             {/if}
                                         {/foreach}
                                     {/if}
@@ -268,19 +272,19 @@
                             {/if}
                         {elseif $_input.type == 'radio'}
                             {foreach $_input.values as $value}
-								<div class="radio {if isset($_input.class)}{$_input.class}{/if}">
+								<div class="radio {if isset($_input.class)}{$_input.class|escape:'html':'UTF-8'}{/if}">
                                     {strip}
 										<label>
 											<input type="radio"
-											       name="{$_input.name}"
-											       id="{$value.id}"
+											       name="{$_input.name|escape:'html':'UTF-8'}"
+											       id="{$value.id|escape:'html':'UTF-8'}"
 											       value="{$value.value|escape:'html':'UTF-8'}"{if $fields_value[$_input.name] == $value.value} checked="checked"{/if}{if isset($_input.disabled) && $_input.disabled} disabled="disabled"{/if}/>
-                                            {$value.label}
+                                            {$value.label|escape:'html':'UTF-8'}
 										</label>
                                     {/strip}
 								</div>
                                 {if isset($value.p) && $value.p}<p
-										class="help-block">{$value.p}</p>{/if}
+										class="help-block">{$value.p|escape:'html':'UTF-8'}</p>{/if}
                             {/foreach}
 
                         {elseif $_input.type == 'switch' || $_input.type == 'shop' || $_input.type == 'switch-choose' }
@@ -306,13 +310,13 @@
 
                                 >
 								{foreach $_input.values as $value}
-									<input type="radio" name="{$_input.name}"
+									<input type="radio" name="{$_input.name|escape:'html':'UTF-8'}"
 									{if $value.value == 1}
-										id="{$_input.name}_on"
+										id="{$_input.name|escape:'html':'UTF-8'}_on"
                                     {else}
-										id="{$_input.name}_off"
+										id="{$_input.name|escape:'html':'UTF-8'}_off"
                                     {/if}
-									value="{$value.value}"
+									value="{$value.value|escape:'html':'UTF-8'}"
 									{if $fields_value[$_input.name] == $value.value}
 										checked="checked"
                                     {/if}
@@ -322,8 +326,8 @@
 									/>
 									{strip}
 										<label {if $value.value == 1}
-										for="{$_input.name}_on"{else}for="{$_input.name}_off"{/if}>
-											{if $value.value == 1}{$value.label}{else}{$value.label}{/if}
+										for="{$_input.name|escape:'html':'UTF-8'}_on"{else}for="{$_input.name|escape:'html':'UTF-8'}_off"{/if}>
+											{if $value.value == 1}{$value.label|escape:'html':'UTF-8'}{else}{$value.label|escape:'html':'UTF-8'}{/if}
 										</label>
 	                                {/strip}
                                 {/foreach}
@@ -333,88 +337,26 @@
 
 
                             {if isset($_input.help)}
-								<p class="help-text">{$_input.help}</p>
+								<p class="help-text">{$_input.help|escape:'html':'UTF-8'}</p>
                             {/if}
 
 
-
-                        {elseif $_input.type == 'color'}
-	                        <div class="form-group" style="margin-bottom:0">
-		                        <div class="" style="margin-right: auto">
-			                        <div class="row">
-				                        <div class="input-group">
-					                        <input type="color"
-					                               data-hex="true"
-
-                                                    {if isset($_input.icon)}
-								                        data-icon="true" data-icon-value="0"
-                                                    {/if}
-
-                                                    {if isset($_input.class)} class="{$_input.class}"
-                                                    {else} class="color mColorPickerInput"{/if}
-							                       name="{$_input.name}"
-							                       value="{$fields_value[$_input.name]|escape:'html':'UTF-8'}" />
-				                        </div>
-			                        </div>
-		                        </div>
-	                        </div>
-
-
-                        {elseif $_input.type == 'textarea'}
-                            {assign var=use_textarea_autosize value=true}
-                            {if isset($_input.lang) AND $_input.lang}
-                                {foreach $languages as $language}
-                                    {if $languages|count > 1}
-										<div class="form-group translatable-field lang-{$language.id_lang}"{if $language.id_lang != $defaultFormLanguage} style="display:none;"{/if}>
-										<div class="col-lg-3">
-                                    {/if}
-									<textarea
-											name="{$_input.name}_{$language.id_lang}"
-											class="{if isset($_input.autoload_rte) && $_input.autoload_rte}rte autoload_rte{if isset($_input.class)} {$_input.class}{/if}{else}{if isset($_input.class)} {$_input.class}{else} textarea-autosize{/if}{/if}">{$fields_value[$_input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
-                                    {if $languages|count > 1}
-										</div>
-										<div class="col-lg-2">
-											<button type="button"
-											        class="btn btn-default dropdown-toggle"
-											        tabindex="-1"
-											        data-toggle="dropdown">
-                                                {$language.iso_code}
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu">
-                                                {foreach from=$languages item=language}
-													<li>
-														<a href="javascript:hideOtherLanguage({$language.id_lang});"
-														   tabindex="-1">{$language.name}</a>
-													</li>
-                                                {/foreach}
-											</ul>
-										</div>
-										</div>
-                                    {/if}
-                                {/foreach}
-
-                            {else}
-								<textarea name="{$_input.name}"
-								          id="{if isset($_input.id)}{$_input.id}{else}{$_input.name}{/if}"
-                                          {if isset($_input.cols)}cols="{$_input.cols}"{/if} {if isset($_input.rows)}rows="{$_input.rows}"{/if} class="{if isset($_input.autoload_rte) && $_input.autoload_rte}rte autoload_rte{if isset($_input.class)} {$_input.class}{/if}{else} textarea-autosize{/if}">{$fields_value[$_input.name]|escape:'html':'UTF-8'}</textarea>
-                            {/if}
                         {elseif $_input.type == 'checkbox'}
                             {if isset($_input.expand)}
 								<a class="btn btn-default show_checkbox{if strtolower($_input.expand.default) == 'hide'} hidden{/if}"
 								   href="#">
-									<i class="icon-{$_input.expand.show.icon}"></i>
-                                    {$_input.expand.show.text}
+									<i class="icon-{$_input.expand.show.icon|escape:'html':'UTF-8'}"></i>
+                                    {$_input.expand.show.text|escape:'html':'UTF-8'}
                                     {if isset($_input.expand.print_total) && $_input.expand.print_total > 0}
-										<span class="badge">{$_input.expand.print_total}</span>
+										<span class="badge">{$_input.expand.print_total|escape:'html':'UTF-8'}</span>
                                     {/if}
 								</a>
 								<a class="btn btn-default hide_checkbox{if strtolower($_input.expand.default) == 'show'} hidden{/if}"
 								   href="#">
-									<i class="icon-{$_input.expand.hide.icon}"></i>
-                                    {$_input.expand.hide.text}
+									<i class="icon-{$_input.expand.hide.icon|escape:'html':'UTF-8'}"></i>
+                                    {$_input.expand.hide.text|escape:'html':'UTF-8'}
                                     {if isset($_input.expand.print_total) && $_input.expand.print_total > 0}
-										<span class="badge">{$_input.expand.print_total}</span>
+										<span class="badge">{$_input.expand.print_total|escape:'html':'UTF-8'}</span>
                                     {/if}
 								</a>
                             {/if}
@@ -422,12 +364,12 @@
                                 {assign var=id_checkbox value=$_input.name|cat:'_'|cat:$value[$_input.values.id]}
 								<div class="checkbox{if isset($_input.expand) && strtolower($_input.expand.default) == 'show'} hidden{/if}">
                                     {strip}
-										<label for="{$id_checkbox}">
+										<label for="{$id_checkbox|escape:'html':'UTF-8'}">
 											<input type="checkbox"
-											       name="{$id_checkbox}"
-											       id="{$id_checkbox}"
-											       class="{if isset($_input.class)}{$_input.class}{/if}"{if isset($value.val)} value="{$value.val|escape:'html':'UTF-8'}"{/if}{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]} checked="checked"{/if} />
-                                            {$value[$_input.values.name]}
+											       name="{$id_checkbox|escape:'html':'UTF-8'}"
+											       id="{$id_checkbox|escape:'html':'UTF-8'}"
+											       class="{if isset($_input.class)}{$_input.class|escape:'html':'UTF-8'}{/if}"{if isset($value.val)} value="{$value.val|escape:'html':'UTF-8'}"{/if}{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]} checked="checked"{/if} />
+                                            {$value[$_input.values.name]|escape:'html':'UTF-8'}
 										</label>
                                     {/strip}
 								</div>
@@ -437,32 +379,13 @@
                             {include file='helpers/form/form_group.tpl'}
                         {elseif $_input.type == 'html'}
                             {if isset($_input.html_content)}
-                                {$_input.html_content}
+                                {$_input.html_content|escape:'htmlall':'UTF-8'}
                             {else}
-                                {$_input.name}
+                                {$_input.name|escape:'htmlall':'UTF-8'}
                             {/if}
                         {/if}
                     {/block}
 
-                    {block name="description"}
-                        {if isset($_input.desc) && !empty($_input.desc)}
-							<p class="help-block">
-                                {if is_array($_input.desc)}
-                                    {foreach $_input.desc as $p}
-                                        {if is_array($p)}
-											<span id="{$p.id}">{$p.text}</span>
-											<br/>
-                                        {else}
-                                            {$p}
-											<br/>
-                                        {/if}
-                                    {/foreach}
-                                {else}
-                                    {$_input.desc}
-                                {/if}
-							</p>
-                        {/if}
-                    {/block}
 
 				</div>
             {/block}

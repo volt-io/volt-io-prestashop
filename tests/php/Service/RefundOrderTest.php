@@ -1,25 +1,18 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Volt\Tests\Service;
 
-use Context;
-use Db;
-use Mockery;
-use PHPUnit\Framework\TestCase;
 use Module;
-use Currency;
-use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
-use Symfony\Component\Translation\TranslatorInterface;
+use PHPUnit\Framework\TestCase;
 use Volt\Service\RefundOrder;
 
 class RefundOrderTest extends TestCase
 {
     private $refundOrder;
 
-    protected function setUp()
-    :void
+    protected function setUp(): void
     {
         $this->module = Module::getInstanceByName('volt');
         $this->refundOrder = new RefundOrder($this->module);
@@ -51,8 +44,6 @@ class RefundOrderTest extends TestCase
         $given = $this->refundOrder->checkIsRefundActive($paymentId);
 
         throw new \Exception('Error in the method of checking the availability of the order return option');
-
         $this->assertSame('Error in the method of checking the availability of the order return option', $given);
     }
-
 }

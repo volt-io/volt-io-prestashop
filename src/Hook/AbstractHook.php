@@ -15,13 +15,14 @@ declare(strict_types=1);
 
 namespace Volt\Hook;
 
-use Volt;
 use Volt\Adapter\ConfigurationAdapter;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 abstract class AbstractHook
 {
-    /**
-     * @var Volt
-     */
     protected $module;
     protected $context;
 
@@ -31,7 +32,7 @@ abstract class AbstractHook
     protected $configuration;
 
     public function __construct(
-        Volt $module,
+        \Volt $module,
         ConfigurationAdapter $configuration
     ) {
         $this->module = $module;

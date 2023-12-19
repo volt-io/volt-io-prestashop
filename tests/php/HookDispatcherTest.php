@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Volt\Tests;
 
-use Context;
-use Db;
 use Module;
 use PHPUnit\Framework\TestCase;
-use Volt;
 use Volt\Adapter\ConfigurationAdapter;
 use Volt\HookDispatcher;
 
@@ -18,8 +15,7 @@ class HookDispatcherTest extends TestCase
     private $configuration;
     private $hookDispatcher;
 
-    protected function setUp()
-    :void
+    protected function setUp(): void
     {
         $this->module = Module::getInstanceByName('volt');
         $this->assertEquals('volt', $this->module->name);
@@ -35,7 +31,7 @@ class HookDispatcherTest extends TestCase
             [
                 'actionFrontControllerSetMedia',
                 'paymentOptions',
-                'displayPayment'
+                'displayPayment',
             ],
             $this->hookDispatcher->getAvailableHooks()
         );
@@ -59,5 +55,4 @@ class HookDispatcherTest extends TestCase
         $given = $this->hookDispatcher->dispatch('displayPayment2', []);
         $this->assertEquals('', $given);
     }
-
 }

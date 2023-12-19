@@ -12,6 +12,9 @@
  * @copyright      Copyright (c) 2015-2023
  * @license        https://www.gnu.org/licenses/lgpl-3.0.en.html GNU Lesser General Public License
  */
+/*!*******************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./frontend/scss/front.scss ***!
+  \*******************************************************************************************************************/
 .payment-option img {
   max-height: 36px;
 }
@@ -278,4 +281,18 @@
 
 .payment-option {
   position: relative;
+}
+
+.payment-option {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+body#checkout section.checkout-step .payment-options label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0;
+  margin: 0;
 }

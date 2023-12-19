@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Volt\Tests\Api;
 
-use Context;
-use Db;
-use PHPUnit\Framework\TestCase;
 use Module;
+use PHPUnit\Framework\TestCase;
 use Volt\Api\Client;
 use Volt\Exception\ApiException;
 use Volt\Tests\Mock\OrderDataMock;
@@ -16,8 +14,7 @@ class ClientTest extends TestCase
 {
     private $module;
 
-    protected function setUp()
-    :void
+    protected function setUp(): void
     {
         $this->module = Module::getInstanceByName('volt');
         $this->client = new Client();
@@ -175,7 +172,7 @@ class ClientTest extends TestCase
     public function testShouldPostRequestFailCurl()
     {
         $this->setFailSandbox();
-        //
+
         $orderDataMock = new OrderDataMock();
         $data = $orderDataMock->getData();
 
@@ -185,5 +182,4 @@ class ClientTest extends TestCase
         $response = $this->client->request('POST', 'dropin-payments', $data, true, true);
         $this->assertNull($response);
     }
-
 }

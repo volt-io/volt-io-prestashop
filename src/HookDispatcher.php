@@ -15,10 +15,13 @@ declare(strict_types=1);
 
 namespace Volt;
 
-use Volt;
 use Volt\Adapter\ConfigurationAdapter;
 use Volt\Hook\Admin;
 use Volt\Hook\Design;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class HookDispatcher
 {
@@ -41,11 +44,6 @@ class HookDispatcher
      */
     protected $hooks = [];
 
-    /**
-     * Module
-     *
-     * @var Volt
-     */
     private $module;
 
     /**
@@ -56,7 +54,7 @@ class HookDispatcher
     private $configuration;
 
     public function __construct(
-        Volt $module,
+        \Volt $module,
         ConfigurationAdapter $configuration
     ) {
         $this->module = $module;
@@ -73,7 +71,6 @@ class HookDispatcher
                 $this->configuration
             );
 
-//            $this->availableHooks = array_merge($this->availableHooks, $hook->getAvailableHooks());
             $this->hooks[] = $hook;
         }
     }

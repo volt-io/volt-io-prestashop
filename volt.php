@@ -80,12 +80,13 @@ class volt extends \PaymentModule
         $this->tab = 'payments_gateways';
         $this->name_upper = \Tools::strtoupper($this->name);
         $this->author = 'Volt Technologies Holdings Limited';
-        $this->version = '1.0.5';
-        $this->ps_versions_compliancy = ['min' => '1.7.5', 'max' => _PS_VERSION_];
+        $this->version = '1.0.8';
+        $this->ps_versions_compliancy = ['min' => '1.7.6', 'max' => _PS_VERSION_];
         $this->currencies = true;
         $this->currencies_mode = 'checkbox';
         $this->need_instance = 0;
         $this->bootstrap = true;
+        $this->module_key = '5a88a6a7e4cfa8b86c2225c2c8e90ab5';
 
         parent::__construct();
 
@@ -101,8 +102,6 @@ class volt extends \PaymentModule
         $this->description = $this->l('Enable your customers to quickly and securely check out using their bank account.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
         $this->initAPI();
-
-        $this->registerHook('actionAdminControllerSetMedia');
     }
 
     /**
@@ -140,14 +139,14 @@ class volt extends \PaymentModule
             }
         }
 
-        $this->registerHook('actionDispatcherAfter');
-        $this->registerHook('actionAdminControllerSetMedia');
+        $this->registerHook('displayHeader');
     }
 
     /**
      * Install module
      *
      * @return bool
+     *
      * @throws Exception
      */
     public function install(): bool
@@ -172,10 +171,14 @@ class volt extends \PaymentModule
         }
 
         $this->registerHook('actionFrontControllerSetMedia');
+        $this->registerHook('actionDispatcherAfter');
+        $this->registerHook('actionAdminControllerSetMedia');
+
         $this->registerHook('displayPayment');
         $this->registerHook('displayAdminOrderMainBottom');
         $this->registerHook('paymentOptions');
         $this->registerHook('hookPaymentReturn');
+        $this->registerHook('displayHeader');
 
         if (false === (new StateFactory(
             $this,
@@ -183,6 +186,7 @@ class volt extends \PaymentModule
             new ConfigurationAdapter($this->context->shop->id)
         ))->install()) {
             $this->_errors[] = $this->l('Installation state error');
+
             return false;
         }
 
@@ -192,6 +196,7 @@ class volt extends \PaymentModule
             $this->getTranslator()
         ))->install()) {
             $this->_errors[] = $this->l('Installation configure');
+
             return false;
         }
 
@@ -212,6 +217,7 @@ class volt extends \PaymentModule
      * @param bool $keep
      *
      * @return bool
+     *
      * @throws DatabaseException|Exception
      */
     public function uninstall(bool $keep = true): bool
@@ -348,10 +354,7 @@ class volt extends \PaymentModule
             return;
         }
         $state = $params['order']->getCurrentState();
-
-
         $this->smarty->assign('status', 'Accepted');
-
 
         return $this->display(__FILE__, 'payment_return.tpl');
     }

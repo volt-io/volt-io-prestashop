@@ -12,6 +12,9 @@
  * @copyright      Copyright (c) 2015-2023
  * @license        https://www.gnu.org/licenses/lgpl-3.0.en.html GNU Lesser General Public License
  */
+/*!******************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./backend/scss/admin.scss ***!
+  \******************************************************************************************************************/
 .volt-configuration {
   display: flex;
   flex-direction: column;
@@ -73,7 +76,6 @@
   .form-group {
     justify-content: center;
   }
-
   .bootstrap .form-horizontal .control-label {
     text-align: right !important;
   }
@@ -117,7 +119,8 @@ body.mobile #content.bootstrap {
 
 .volt-switcher {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-wrap: wrap;
   min-width: 100%;
   margin-top: 3px;
   font-size: 0.813rem;

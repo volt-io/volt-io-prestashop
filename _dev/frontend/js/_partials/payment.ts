@@ -52,20 +52,28 @@ const collapsePayment = (payment: string) => {
     paymentLoading.style.display = 'block';
     paymentPlaceholder.innerHTML = "";
 
-
     const createPaymentWidget = paymentFetch(url, paymentData).then(response => {
         // @ts-ignore
         const responseBody = response;
 
-        if (responseBody.exception?.message) {
-            alert(responseBody.exception.message)
+        if (responseBody.exception && responseBody.exception.errorList && responseBody.exception.errorList.length > 0) {
+            const loadingContainer = document.querySelector('.volt-loading');
+            while (loadingContainer.firstChild) {
+                loadingContainer.removeChild(loadingContainer.firstChild);
+            }
+
+            for (const error of responseBody.exception.errorList) {
+                if (error.message) {
+                    console.error(error.message);
+                }
+            }
+
+            return Promise.reject(responseBody.exception.message);
         }
 
         const paymentContainer = volt.payment({
             payment: responseBody,
-            // language: config.language,
-            // country: config.country,
-            language: 'pl',
+            language: configSettings.language,
             country: configSettings.country
         })
 
@@ -85,7 +93,7 @@ const collapsePayment = (payment: string) => {
         // const payButton = <HTMLButtonElement>document.getElementById("confirm_order")
         const payButton = <HTMLButtonElement>document.querySelector("#payment-confirmation button")
 
-        console.warn(paymentComponent);
+        console.log(paymentComponent);
 
         if (paymentComponent.parent.options.payment.id) {
             payButton.onclick = function (e) {
@@ -101,11 +109,23 @@ const collapsePayment = (payment: string) => {
                     ajax: true
                 };
 
-                paymentFetch(url2, PaymentComponentPayload).then(response => {
-                    console.error(response);
-                });
+                let voltPayment;
 
-                paymentComponent.checkout()
+                const createTransactionController = async () => {
+                    try {
+                        voltPayment = await paymentFetch2(url2, PaymentComponentPayload);
+
+                        if (voltPayment.status === true) {
+                            paymentComponent.checkout();
+                        } else {
+                            setTimeout(createTransactionController, 3000);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
+                };
+
+                createTransactionController();
 
             }
 
@@ -211,7 +231,10 @@ function paymentFetch(url: string, config: {}) {
     interface Resp {
         status: boolean,
         exception?: {
-            message: string
+            message: string,
+            errorList: Array<{
+                message: string
+            }>,
         }
     }
 
@@ -225,7 +248,36 @@ function paymentFetch(url: string, config: {}) {
 
         .then((response) => response.json())
         .catch(e => {
+            console.log(e)
             console.log(configSettings.errorMsg)
+        })
+        .then((data) => data as Resp);
+}
+
+
+
+function paymentFetch2(url: string, config: {}) {
+    interface Resp {
+        status: boolean,
+        exception?: {
+            message: string,
+            errorList: Array<{
+                message: string
+            }>,
+        }
+    }
+
+    const params: RequestInit = {
+        method: 'POST',
+        headers,
+        body: new URLSearchParams(config)
+    };
+
+    return fetch(url, params)
+
+        .then((response) => response.json())
+        .catch(e => {
+            console.log(e)
         })
         .then((data) => data as Resp);
 }

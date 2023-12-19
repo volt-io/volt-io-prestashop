@@ -15,6 +15,10 @@ declare(strict_types=1);
 
 namespace Volt\Util;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Helper
 {
     public static function getFields(): array
@@ -42,14 +46,22 @@ class Helper
 
     public static function getClientIp()
     {
-        $ip = getenv('HTTP_CLIENT_IP') ? getenv('HTTP_CLIENT_IP') :
-            getenv('HTTP_X_FORWARDED_FOR') ? getenv('HTTP_X_FORWARDED_FOR') :
-                getenv('HTTP_X_FORWARDED') ? getenv('HTTP_X_FORWARDED') :
-                    getenv('HTTP_FORWARDED_FOR') ? getenv('HTTP_FORWARDED_FOR') :
-                        getenv('HTTP_FORWARDED') ? getenv('HTTP_FORWARDED') :
-                            getenv('REMOTE_ADDR');
+        $ipHeaders = [
+            'HTTP_CLIENT_IP',
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_FORWARDED',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED',
+            'REMOTE_ADDR',
+        ];
 
-        return !$ip ? self::getClientIpServer() : $ip;
+        foreach ($ipHeaders as $header) {
+            if (($ip = getenv($header)) !== false) {
+                return $ip;
+            }
+        }
+
+        return self::getClientIpServer();
     }
 
     /**
@@ -72,6 +84,7 @@ class Helper
         } else {
             $ip = $_SERVER['REMOTE_ADDR'] ?? 'UNKNOWN';
         }
+
         return $ip;
     }
 

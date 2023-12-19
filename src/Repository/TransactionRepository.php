@@ -18,6 +18,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Volt\Entity\VoltTransactions;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TransactionRepository
 {
     public const TABLE = 'volt_transactions';
