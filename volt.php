@@ -11,8 +11,6 @@
  * @license   LICENSE.txt
  * @description Enable your customers to quickly and securely check out using their bank account.
  */
-declare(strict_types=1);
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -24,6 +22,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 use Configuration as Cfg;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Volt\Adapter\ConfigurationAdapter;
 use Volt\Api\Client;
 use Volt\Database\Configure;
@@ -32,8 +31,7 @@ use Volt\Exception\DatabaseException;
 use Volt\Factory\StateFactory;
 use Volt\HookDispatcher;
 use Volt\Service\Schedule;
-
-class volt extends \PaymentModule
+class volt extends PaymentModule
 {
     public $_errors;
     public $_path;
@@ -59,6 +57,8 @@ class volt extends \PaymentModule
     private $hookDispatcher;
     public $api;
 
+    private $serviceContainer;
+
     public $tabs = [
           [
               'class_name' => 'AdminVoltGeneralController',
@@ -78,9 +78,9 @@ class volt extends \PaymentModule
     {
         $this->name = 'volt';
         $this->tab = 'payments_gateways';
-        $this->name_upper = \Tools::strtoupper($this->name);
+        $this->name_upper = Tools::strtoupper($this->name);
         $this->author = 'Volt Technologies Holdings Limited';
-        $this->version = '1.0.8';
+        $this->version = '1.1.1';
         $this->ps_versions_compliancy = ['min' => '1.7.6', 'max' => _PS_VERSION_];
         $this->currencies = true;
         $this->currencies_mode = 'checkbox';
@@ -101,7 +101,15 @@ class volt extends \PaymentModule
         $this->displayName = $this->l('Pay by Bank');
         $this->description = $this->l('Enable your customers to quickly and securely check out using their bank account.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall this module?');
+
+        $this->serviceContainer = new \PrestaShop\ModuleLibServiceContainer\DependencyInjection\ServiceContainer(
+            $this->name,
+            $this->getLocalPath()
+        );
+
         $this->initAPI();
+
+
     }
 
     /**
@@ -134,8 +142,8 @@ class volt extends \PaymentModule
                 $this->api->setLogin($username);
                 $this->api->setPassword($password);
                 $this->api->getToken();
-            } catch (\Exception $exception) {
-                \PrestaShopLogger::addLog($exception->getMessage(), 3);
+            } catch (Exception $exception) {
+                PrestaShopLogger::addLog($exception->getMessage(), 3);
             }
         }
 
@@ -182,11 +190,10 @@ class volt extends \PaymentModule
 
         if (false === (new StateFactory(
             $this,
-            new \OrderState(),
+            new OrderState(),
             new ConfigurationAdapter($this->context->shop->id)
         ))->install()) {
             $this->_errors[] = $this->l('Installation state error');
-
             return false;
         }
 
@@ -222,7 +229,7 @@ class volt extends \PaymentModule
      */
     public function uninstall(bool $keep = true): bool
     {
-        if (!parent::uninstall() || false === (new Installer($this) )->uninstall()) {
+        if (!parent::uninstall() || false === (new Installer($this))->uninstall()) {
             $this->_errors[] = $this->l('Installation error');
         }
 
@@ -238,16 +245,11 @@ class volt extends \PaymentModule
      *
      * @return mixed
      */
-    public function getService(string $serviceName)
+    public function getService($serviceName)
     {
-        $container = SymfonyContainer::getInstance();
-
-        if ($container !== null) {
-            return $container->get($serviceName);
-        }
-
-        return $this->get($serviceName);
+        return $this->serviceContainer->getService($serviceName);
     }
+
 
     /**
      * Redirect to main controller

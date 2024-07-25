@@ -18,7 +18,6 @@ namespace Volt\Util;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
 class Helper
 {
     public static function getFields(): array

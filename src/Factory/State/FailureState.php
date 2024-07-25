@@ -35,6 +35,8 @@ class FailureState implements IState
     public $stateLanguage = [
         'pl' => 'Błąd płatności (Volt)',
         'en' => 'Error payment (Volt)',
+        'fr' => "Paiement de l'erreur (Volt)",
+        'de' => 'Fehlerzahlung (Volt)',
     ];
 
     public function __construct(

@@ -10,12 +10,9 @@
  * @copyright 2023, Volt Technologies Holdings Limited
  * @license   LICENSE.txt
  */
-declare(strict_types=1);
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
 class VoltNotificationsModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
@@ -47,7 +44,7 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
                 $signed = $value;
             }
 
-            $entityBody = \Tools::file_get_contents('php://input');
+            $entityBody = Tools::file_get_contents('php://input');
             $body = json_decode($entityBody, true);
         }
 
@@ -58,7 +55,7 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
         header('x-volt-timed: ' . $timed);
         header('User-Agent: ' . $ver);
 
-        $entityBody = \Tools::file_get_contents('php://input');
+        $entityBody = Tools::file_get_contents('php://input');
         $body = json_decode($entityBody, true);
 
         $paymentId = $body['payment'] ?? null;
@@ -66,8 +63,7 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
         $state = $body['status'] ?? null;
 
         if ($paymentId && $state && $body) {
-
-            if(!$this->checkOrderVoltApi($paymentId)) {
+            if (!$this->checkOrderVoltApi($paymentId)) {
                 return;
             }
 
@@ -76,7 +72,7 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
             // Refund
             if ($refundId) {
                 $this->changeRefundState($refundId, $paymentId, $state, $body);
-                \PrestaShopLogger::addLog('refund', 3);
+                PrestaShopLogger::addLog('refund', 3);
             }
         }
 
@@ -88,11 +84,11 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
         try {
             $order = $this->module->api->request('GET', 'payments/' . urldecode($paymentId));
             if ($order->id !== $paymentId) {
-                \PrestaShopLogger::addLog('Volt - Error: Wrong payment id notification' , 3);
+                PrestaShopLogger::addLog('Volt - Error: Wrong payment id notification', 3);
                 return false;
             }
-        } catch (\Exception $exception) {
-            \PrestaShopLogger::addLog($exception, 1);
+        } catch (Exception $exception) {
+            PrestaShopLogger::addLog($exception, 1);
             return false;
         }
 
@@ -123,7 +119,7 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
                 $detailedStatus
             );
             $orderId = $this->transitionRepository->getOrderIdByPaymentId($paymentId);
-            $order = new \Order($orderId);
+            $order = new Order($orderId);
 
             if ($state === 'RECEIVED' || $state === 'REFUND_CONFIRMED') {
                 $refund = $state === 'REFUND_CONFIRMED';
@@ -150,7 +146,7 @@ class VoltNotificationsModuleFrontController extends ModuleFrontController
             );
 
             $orderId = $this->refundRepository->getOrderIdByRefundId($refundId);
-            $order = new \Order($orderId);
+            $order = new Order($orderId);
 
             if ($state === 'REFUND_CONFIRMED') {
                 $stateService = $this->module->getService('volt.handler.order_state');

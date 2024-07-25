@@ -15,11 +15,11 @@ declare(strict_types=1);
 
 namespace Volt\Hook;
 
-use Volt\Service\RefundOrder;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Volt\Service\RefundOrder;
 
 class Admin extends AbstractHook
 {
@@ -38,7 +38,7 @@ class Admin extends AbstractHook
         $order = new \Order($params['id_order']);
         $output = '';
 
-        if ($order->module !== 'volt') {
+        if ($order->module !== 'volt' || \Tools::getValue('volt_refund_amount')) {
             return $output;
         }
 
@@ -47,7 +47,12 @@ class Admin extends AbstractHook
         $transaction = $this->transactionRepository->getOrderByOrderId($params['id_order'])[0];
 
         $refundType = \Tools::getValue('volt_refund_type', 'full');
-        $refundValue = (float) str_replace(',', '.', \Tools::getValue('volt_refund_amount'));
+        $refundValue = 0.0;
+
+        if (Tools::getValue('volt_refund_amount')) {
+            $refundValue = (float) str_replace(',', '.', \Tools::getValue('volt_refund_amount'));
+        }
+
         $refundAmount = $refundType === 'full'
             ? $order->total_paid
             : $refundValue;

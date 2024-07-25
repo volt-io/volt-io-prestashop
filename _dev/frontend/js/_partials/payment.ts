@@ -2,6 +2,7 @@
 const configSettings = voltSettings ?? [];
 
 let mode = "sandbox";
+
 if(configSettings.env !== null && configSettings.env === '1') {
     mode = "production"
 }
@@ -87,19 +88,26 @@ const collapsePayment = (payment: string) => {
         }
         return paymentComponent;
     });
+    
 
     createPaymentWidget.then((paymentComponent) => {
         // if the checkout
         // const payButton = <HTMLButtonElement>document.getElementById("confirm_order")
         const payButton = <HTMLButtonElement>document.querySelector("#payment-confirmation button")
-
-        console.log(paymentComponent);
-
+        
         if (paymentComponent.parent.options.payment.id) {
             payButton.onclick = function (e) {
                 e.preventDefault();
 
-                console.log(paymentComponent);
+                console.log('update');
+
+                let voltUpdate = localStorage.getItem('volt_update');
+
+                if (voltUpdate) {
+                    updatePrestashopCart();
+                }
+
+
 
 
                 const url2 = configSettings.ajax_url;
@@ -134,13 +142,57 @@ const collapsePayment = (payment: string) => {
             });
 
         } else {
-            payButton.disabled
+            // payButton.disabled
             alert('No support this currency')
         }
 
     })
 }
 
+
+function updatePrestashopCart() {
+    // @ts-ignore
+    if (typeof prestashop !== 'undefined') {
+
+        let cartProducts = document.querySelector('.js-cart-summary-products');
+        let cartSubtotals = document.querySelector('.js-cart-summary-subtotals-container');
+        let cartTotal = document.querySelector('.js-cart-summary-totals');
+
+        fetch(configSettings.cart_url)
+            .then(response => response.json())
+            .then(data => {
+
+                let parser = new DOMParser();
+                let parseCartProducts = parser.parseFromString(data.cart_summary_products, "text/html");
+                let parseCartSubtotals = parser.parseFromString(data.cart_summary_subtotals_container, "text/html");
+                let parseCartTotal = parser.parseFromString(data.cart_summary_totals, "text/html");
+
+                let cartProductsContent : HTMLElement = parseCartProducts.querySelector(".js-cart-summary-products");
+                let cartCartSubtotalsContent : HTMLElement = parseCartSubtotals.querySelector(".js-cart-summary-subtotals-container");
+                let cartCartTotal : HTMLElement = parseCartTotal.querySelector(".js-cart-summary-totals");
+
+                cartProducts.replaceWith(cartProductsContent);
+                cartSubtotals.replaceWith(cartCartSubtotalsContent);
+                cartTotal.replaceWith(cartCartTotal);
+
+
+                    // updatePrestashopCart();
+
+                const payButton = <HTMLButtonElement>document.querySelector("#payment-confirmation button")
+
+                setTimeout(() => {
+                    payButton.disabled = false;
+                    payButton.classList.remove('disabled');
+                }, 250);
+
+
+                localStorage.removeItem('volt_update');
+
+
+            })
+            .catch(error => console.error('Error updating cart elements:', error));
+    }
+}
 
 function setPaymenyId(id:string) {
     localStorage.setItem('volt_pid', id);

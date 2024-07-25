@@ -17,7 +17,6 @@ namespace Volt\Factory\State;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
 class PendingState implements IState
 {
     /**
@@ -35,6 +34,8 @@ class PendingState implements IState
     public $stateLanguage = [
         'pl' => 'Oczekiwanie na płatność (Volt)',
         'en' => 'Waiting for payment (Volt)',
+        'fr' => 'En attente de paiement (Volt)',
+        'de' => 'Warten auf Zahlung (Volt)',
     ];
 
     public function __construct(

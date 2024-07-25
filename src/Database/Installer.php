@@ -15,11 +15,11 @@ declare(strict_types=1);
 
 namespace Volt\Database;
 
-use Volt\Exception\DatabaseException;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Volt\Exception\DatabaseException;
 
 class Installer
 {

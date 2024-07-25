@@ -14,35 +14,24 @@ declare(strict_types=1);
 
 namespace Volt\Handler;
 
-use Volt\Adapter\ConfigurationAdapter;
-use Volt\Config\Config;
-use Volt\Repository\TransactionRepository;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Volt\Adapter\ConfigurationAdapter;
+use Volt\Config\Config;
+use Volt\Repository\TransactionRepository;
+
 class OrderStateHandler
 {
-    /**
-     * @var OrderHistory
-     */
     public $orderHistory;
-
-    /**
-     * @var configurationAdapter
-     */
     private $configuration;
-
-    /**
-     * @var transactionsRepository
-     */
     private $transactionsRepository;
 
     public function __construct(
         \OrderHistory $orderHistory,
         ConfigurationAdapter $configuration,
-        transactionRepository $transactionsRepository
+        TransactionRepository $transactionsRepository
     ) {
         $this->orderHistory = $orderHistory;
         $this->configuration = $configuration;

@@ -14,13 +14,13 @@ declare(strict_types=1);
 
 namespace Volt\Repository;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
-use Volt\Entity\VoltRefunds;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
+use Volt\Entity\VoltRefunds;
 
 class RefundRepository
 {

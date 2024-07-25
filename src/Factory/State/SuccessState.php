@@ -17,7 +17,6 @@ namespace Volt\Factory\State;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
 class SuccessState implements IState
 {
     /**
@@ -35,6 +34,8 @@ class SuccessState implements IState
     public $stateLanguage = [
         'pl' => 'Płatność zaakceptowana (Volt)',
         'en' => 'Payment accepted (Volt)',
+        'fr' => 'Paiement accepté (Volt)',
+        'de' => 'Zahlung akzeptiert (Volt)',
     ];
 
     public function __construct(

@@ -2,6 +2,7 @@ import {checkPayment} from "./_partials/payment";
 import {getIdElement} from "./_partials/helpers";
 import {openModal, closeModal, ready} from "./_partials/modal";
 import {createIconInfo, createPartnerIcons, showPartnerIcons} from "./_partials/icons";
+// import {PatchData, patchData} from "./_partials/updatePayment";
 
 
 let moduleName: HTMLElement = document.querySelector('[data-module-name="volt"]');
@@ -63,7 +64,7 @@ function isVoltModuleChecked() {
     }
 }
 
-function paymentOption(formRadioId: HTMLInputElement) {
+export function paymentOption(formRadioId: HTMLInputElement) {
     if(formRadioId) {
         checkPayment()
     }
@@ -101,4 +102,33 @@ function getVoltPaymentElement()
 
     return array.filter(element => Array.from(element.children)
         .some(item => item.classList.contains(classElm)));
+}
+
+// @ts-ignore
+if (typeof prestashop !== 'undefined') {
+
+    interface Window {
+        previousCartQuantity: number;
+        previousTotalPrice: number;
+    }
+
+    // @ts-ignore
+    prestashop.on('updateCart', function (event: any) {
+        if (event.resp && event.resp.cart) {
+            // @ts-ignore
+            const configSettings = voltSettings ?? [];
+            const url: string = configSettings.ajax_url + '?action=updateTransaction' ;
+
+            getUpdate(url).then(response => response.json()) // Konwersja odpowiedzi do formatu JSON
+                .then(data => console.log(data)) // Wyświetlenie odpowiedzi z serwera
+                .catch(error => console.error('Błąd:', error)); // Obsługa błędów
+
+            localStorage.setItem('volt_update', '1');
+
+        }
+    });
+}
+
+function getUpdate(url: string) {
+    return fetch(url)
 }

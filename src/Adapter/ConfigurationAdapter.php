@@ -13,11 +13,11 @@
 
 namespace Volt\Adapter;
 
-use Configuration as Cfg;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Configuration as Cfg;
 
 class ConfigurationAdapter
 {

@@ -10,14 +10,12 @@
  * @copyright 2023, Volt Technologies Holdings Limited
  * @license   LICENSE.txt
  */
-declare(strict_types=1);
-
-use Configuration as Cfg;
-use Volt\Util\Helper;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Configuration as Cfg;
+use Volt\Util\Helper;
 
 class AdminVoltGeneralController extends ModuleAdminController
 {
@@ -52,7 +50,7 @@ class AdminVoltGeneralController extends ModuleAdminController
     {
         $this->getLanguages();
         $this->context->smarty->assign([
-            'maintenance_mode' => !(bool) Configuration::get('PS_SHOP_ENABLE'),
+            'maintenance_mode' => !(bool) Cfg::get('PS_SHOP_ENABLE'),
             'debug_mode' => (bool) _PS_MODE_DEV_,
             'lite_display' => $this->lite_display,
             'url_post' => self::$currentIndex . '&token=' . $this->token,
@@ -102,8 +100,8 @@ class AdminVoltGeneralController extends ModuleAdminController
     public function renderForm()
     {
         $fields_form = [];
-        $id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
-        $statuses = \OrderState::getOrderStates($id_default_lang, true);
+        $id_default_lang = (int) Cfg::get('PS_LANG_DEFAULT');
+        $statuses = OrderState::getOrderStates($id_default_lang, true);
         $fields_form[0]['form'] = [
             'section' => [
                 'title' => $this->l('Authentication'),

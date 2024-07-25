@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Volt\Api;
 
-use Volt\Exception\ApiException;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Volt\Exception\ApiException;
 
 class Client
 {
@@ -116,8 +116,8 @@ class Client
         $authorization = $this->getToken();
 
         $api_headers = [
-            "Authorization: Bearer {$authorization}",
-            "Content-Type: application/json",
+            'Authorization: Bearer ' . $authorization,
+            'Content-Type: application/json',
         ];
 
         if ($analyst) {
@@ -190,8 +190,7 @@ class Client
 
         curl_close($curl);
 
-//        $resp = null;
-
+        $resp = null;
 
         if ($error) {
             \PrestaShopLogger::addLog('Volt - Error: ' . $error, 3);
@@ -207,9 +206,4 @@ class Client
 
         return null;
     }
-
-
-
-
-
 }

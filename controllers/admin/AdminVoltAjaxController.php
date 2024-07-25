@@ -12,12 +12,13 @@
  */
 declare(strict_types=1);
 
-use Configuration as Cfg;
-use Volt\Util\Helper;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Configuration as Cfg;
+use Volt\Util\Helper;
+
 class AdminVoltAjaxController extends ModuleAdminController
 {
     public function __construct()

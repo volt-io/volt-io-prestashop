@@ -76,9 +76,14 @@ class Design extends AbstractHook
         );
 
         $ajax = $this->context->link->getModuleLink('volt', 'initPayment', [], true);
+
+        $link = $this->context->link;
+        $cart_url = $link->getPageLink('cart', true, null, ['ajax' => '1', 'action' => 'refresh']);
+
         \Media::addJsDef(
             [
                 'voltSettings' => [
+                    'cart_url' => $cart_url,
                     'ajax_url' => $ajax,
                     'env' => $this->configuration->get('VOLT_ENV'),
                     'country' => $this->context->country->iso_code,

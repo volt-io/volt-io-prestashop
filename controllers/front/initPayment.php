@@ -10,15 +10,14 @@
  * @copyright 2023, Volt Technologies Holdings Limited
  * @license   LICENSE.txt
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use Configuration as Cfg;
 use Volt\Config\Config;
 use Volt\Service\OrderData;
 use Volt\Util\Helper;
-
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
 
 class VoltInitPaymentModuleFrontController extends ModuleFrontController
 {
@@ -36,28 +35,70 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
         $this->transitionRepository = $this->get('volt.repository.transaction');
     }
 
-    /**
-     * @throws PrestaShopException
-     */
     public function initContent()
     {
         parent::initContent();
         $ajax = true;
+        $context = $this->module->getContext();
 
         if (Tools::getValue('action') === 'initPayment') {
+            $this->removePaymentId();
             $this->initPayment();
         } elseif (Tools::getValue('action') === 'createTransaction') {
+            $customer = $context->customer;
             $paymentId = trim(Tools::getValue('paymentId'));
             $this->initTransaction($paymentId);
 
-            $paymentId = trim(Tools::getValue('paymentId'));
-            $context = $this->module->getContext();
-            $cart = $context->cart;
-            $customer = $context->customer;
-            $this->createOrder($cart, $customer, $paymentId);
-        }
+            $this->createOrder(
+                $context->cart,
+                $customer,
+                $paymentId
+            );
+        } elseif (Tools::getValue('action') === 'updateTransaction') {
+            $amount = (int) ($context->cart->getOrderTotal(true, Cart::BOTH) * 100);
+            $paymentId = $this->getPaymentId();
+            $patch = '';
 
+            if ($paymentId) {
+                $patch = $this->module->api->request(
+                    'PATCH',
+                    'dropin/' . $paymentId,
+                    [
+                        'amount' => $amount,
+                    ],
+                    true
+                );
+            }
+
+            header('Content-Type: application/json');
+            $this->ajaxDie(json_encode($patch));
+        }
         exit;
+    }
+
+    private function savePaymentId($paymentId)
+    {
+        $encryptedData = $paymentId;
+        $cookie = new Cookie('volt_pid');
+        $cookie->volt_pid = $encryptedData;
+        $cookie->write();
+    }
+
+    private function getPaymentId()
+    {
+        $cookie = new Cookie('volt_pid');
+        if (isset($cookie->volt_pid)) {
+            return $cookie->volt_pid;
+        }
+        return null;
+    }
+
+    private function removePaymentId()
+    {
+        $cookie = new Cookie('volt_pid');
+        $cookie->volt_pid = '';
+        $cookie->logout();
+        $cookie->write();
     }
 
     private function getOrderData($context)
@@ -75,7 +116,6 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
     private function createOrderData(): array
     {
         $context = $this->module->getContext();
-
         return $this->getOrderData($context)->getData($context->cart);
     }
 
@@ -87,8 +127,10 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
             $this->createOrderData(),
             true
         );
+        $payData = json_encode($pay);
+        $this->savePaymentId($pay->id);
 
-        $this->ajaxRender(json_encode($pay));
+        $this->ajaxRender($payData);
     }
 
     public function initTransaction($paymentId)
@@ -101,8 +143,8 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
             if (!$this->transitionRepository->isTransactionExists($paymentId)) {
                 $this->transitionRepository->initTransaction($paymentId);
             }
-        } catch (\Exception $exception) {
-            \PrestaShopLogger::addLog($exception, 3);
+        } catch (Exception $exception) {
+            PrestaShopLogger::addLog($exception, 3);
         }
 
         return $this->ajaxRender(json_encode(['status' => true]));
@@ -119,14 +161,14 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
      */
     private function createOrder($cart, $customer, $paymentId): void
     {
-        $orderTotal = (float) $cart->getOrderTotal();
+        $orderTotal = $cart->getOrderTotal(true, Cart::BOTH);
         $state = 'PENDING';
 
         if (
-            \Validate::isLoadedObject($cart)
+            Validate::isLoadedObject($cart)
             && !$cart->OrderExists()
         ) {
-            $this->createShopOrder($cart->id, $orderTotal, $customer, $paymentId);
+            $this->createShopOrder($cart->id, $orderTotal, $customer);
 
             if (isset($this->module->currentOrder) && !empty($this->module->currentOrder)) {
                 $this->transitionRepository->updateTransactionOrderByPaymentId(
@@ -140,29 +182,10 @@ class VoltInitPaymentModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Create prestashop order
-     *
-     * @param $cardId
-     * @param $orderTotal
-     * @param $customer
-     * @param $paymentId
-     */
-    private function createShopOrder($cardId, $orderTotal, $customer, $paymentId)
+    private function createShopOrder($cardId, $orderTotal, $customer)
     {
         $voltStates = (bool) Cfg::get('VOLT_CUSTOM_STATE');
         $state = $voltStates ? Cfg::get(Config::VOLT_PENDING) : Cfg::get('PS_OS_BANKWIRE');
-
-//        sleep(3);
-//
-//        try {
-//            $order = $this->module->api->request('GET', 'payments/' . urldecode($paymentId));
-//            \PrestaShopLogger::addLog($this->module->api->getToken(), 1);
-//            \PrestaShopLogger::addLog($paymentId, 1);
-//            \PrestaShopLogger::addLog(print_r($order, true), 1);
-//        } catch (\Exception $exception) {
-//            \PrestaShopLogger::addLog($exception, 1);
-//        }
 
         $this->module->validateOrder(
             (int) $cardId,

@@ -16,7 +16,6 @@ namespace Volt\Factory;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
 class ContextFactory
 {
     public static function getContext()

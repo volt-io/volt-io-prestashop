@@ -14,13 +14,13 @@ declare(strict_types=1);
 
 namespace Volt\Repository;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManager;
-use Volt\Entity\VoltTransactions;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
+use Volt\Entity\VoltTransactions;
 
 class TransactionRepository
 {
@@ -78,7 +78,6 @@ class TransactionRepository
 
         return $qb->execute()->fetchAll();
     }
-
     public function isTransactionExists($paymentId)
     {
         return (bool) $this->getTransactionByPaymentId($paymentId);

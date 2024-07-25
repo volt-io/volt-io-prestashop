@@ -15,13 +15,13 @@ declare(strict_types=1);
 
 namespace Volt;
 
-use Volt\Adapter\ConfigurationAdapter;
-use Volt\Hook\Admin;
-use Volt\Hook\Design;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Volt\Adapter\ConfigurationAdapter;
+use Volt\Hook\Admin;
+use Volt\Hook\Design;
 
 class HookDispatcher
 {

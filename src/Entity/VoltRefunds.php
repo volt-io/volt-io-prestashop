@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Volt\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table()

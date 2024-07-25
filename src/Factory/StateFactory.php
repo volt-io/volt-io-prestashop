@@ -10,19 +10,18 @@
  * @copyright 2023, Volt Technologies Holdings Limited
  * @license   LICENSE.txt
  */
-declare(strict_types=1);
 
 namespace Volt\Factory;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 use Volt\Adapter\ConfigurationAdapter;
 use Volt\Factory\State\FailureState;
 use Volt\Factory\State\NotPaidState;
 use Volt\Factory\State\PendingState;
 use Volt\Factory\State\SuccessState;
-
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
 
 class StateFactory
 {
@@ -108,6 +107,22 @@ class StateFactory
         return $state;
     }
 
+
+    private function existsLocalizedNameInDatabase(string $name, int $idLang, ?int $excludeIdOrderState): bool
+    {
+        return (bool) \Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(*) AS count' .
+            ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
+            ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` 
+            AND osl.`id_lang` = ' . $idLang . ')' .
+            ' WHERE osl.id_lang = ' . $idLang .
+            ' AND osl.name =  \'' . pSQL($name) . '\'' .
+            ' AND os.deleted = 0' .
+            ($excludeIdOrderState ? ' AND osl.id_order_state != ' . $excludeIdOrderState : '')
+        );
+    }
+
+
     /**
      * Checks if the status is available
      *
@@ -119,7 +134,7 @@ class StateFactory
     {
         if (!empty($name)) {
             foreach (\Language::getLanguages() as $lang) {
-                return \OrderState::existsLocalizedNameInDatabase(
+                return $this->existsLocalizedNameInDatabase(
                     $name[$lang['iso_code']],
                     (int) $lang['id_lang'],
                     \Tools::getIsset('id_order_state') ? (int) \Tools::getValue('id_order_state') : null

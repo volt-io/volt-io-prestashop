@@ -15,11 +15,11 @@ declare(strict_types=1);
 
 namespace Volt\Hook;
 
-use Volt\Adapter\ConfigurationAdapter;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Volt\Adapter\ConfigurationAdapter;
 
 abstract class AbstractHook
 {

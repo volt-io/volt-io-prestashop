@@ -14,11 +14,11 @@ declare(strict_types=1);
 
 namespace Volt\Service;
 
-use Volt\Util\Helper;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Volt\Util\Helper;
 
 class OrderData
 {

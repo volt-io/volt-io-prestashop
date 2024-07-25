@@ -13,6 +13,10 @@
     .additional-information.volt {
 	    width: 100%;
     }
+    .volt-payment {
+        position: relative;
+        z-index: 1;
+    }
 </style>
 
 <div data-payment-module="volt" class="volt-payment">

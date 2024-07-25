@@ -17,7 +17,6 @@ namespace Volt\Factory\State;
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-
 class NotPaidState implements IState
 {
     /**
@@ -35,6 +34,8 @@ class NotPaidState implements IState
     public $stateLanguage = [
         'pl' => 'Nieopłacone (Volt)',
         'en' => 'Not paid (Volt)',
+        'fr' => 'Non payé (Volt)',
+        'de' => 'Nicht bezahlt (Volt)',
     ];
 
     public function __construct(

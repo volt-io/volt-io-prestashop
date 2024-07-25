@@ -10,7 +10,6 @@
  * @copyright 2023, Volt Technologies Holdings Limited
  * @license   LICENSE.txt
  */
-
 declare(strict_types=1);
 
 if (!defined('_PS_VERSION_')) {

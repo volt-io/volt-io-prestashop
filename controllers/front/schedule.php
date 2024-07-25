@@ -10,8 +10,6 @@
  * @copyright 2023, Volt Technologies Holdings Limited
  * @license   LICENSE.txt
  */
-declare(strict_types=1);
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -29,22 +27,22 @@ class VoltScheduleModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        if (\Tools::getValue('action') === 'schedule') {
+        if (Tools::getValue('action') === 'schedule') {
             $this->schedule();
         }
     }
 
     private function schedule()
     {
-        $date = new \DateTime('now');
+        $date = new DateTime('now');
         $dateFormat = $date->format('Y-m-d H:i:s');
 
-        $sql = new \DbQuery();
+        $sql = new DbQuery();
         $sql->select('crc, order_id');
         $sql->from('volt_transactions', 'v');
         $sql->where('v.date_upd < DATE_ADD("' . $dateFormat . '", INTERVAL 3 HOUR)');
         $sql->where('v.status = "FAILED"');
-        $repo = \Db::getInstance()->executeS($sql);
+        $repo = Db::getInstance()->executeS($sql);
 
         foreach ($repo as $r) {
             if (isset($r['crc'], $r['order_id'])) {
@@ -59,7 +57,7 @@ class VoltScheduleModuleFrontController extends ModuleFrontController
         $transactionRepository->updateTransactionStatusByPaymentId($paymentId, 'FAILED');
 
         // Update order state
-        $order = new \Order($orderId);
+        $order = new Order($orderId);
         $stateService = $this->module->getService('volt.handler.order_state');
         $stateService->changeOrdersState($order, $paymentId, false, false, true);
     }

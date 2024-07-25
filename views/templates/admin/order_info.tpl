@@ -104,10 +104,10 @@
                                             {l s='Refund type' mod='volt'}
 										</label>
 										<select id="volt_refund_type" name="volt_refund_type" class="custom-select">
-											<option value="full"{if $typeRefund eq "full"} selected="selected"{/if}>
+											<option value="full"{if $refund_type eq "full"} selected="selected"{/if}>
                                                 {l s='Full' mod='volt'}
 											</option>
-											<option value="partial"{if $typeRefund eq "partial"} selected="selected"{/if}>
+											<option value="partial"{if $refund_type eq "partial"} selected="selected"{/if}>
                                                 {l s='Partial' mod='volt'}
 											</option>
 										</select>

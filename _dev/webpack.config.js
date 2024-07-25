@@ -13,7 +13,7 @@ const METADATA = "/**\n" +
 	" * https://www.gnu.org/licenses/lgpl-3.0.en.html\n" +
 	" *\n" +
 	" * @package        Volt Technologies Holdings Limited\n" +
-	" * @copyright      Copyright (c) 2015-2023\n" +
+	" * @copyright      Copyright (c) 2015-2024\n" +
 	" * @license        https://www.gnu.org/licenses/lgpl-3.0.en.html GNU Lesser General Public License\n" +
 	" */";
 

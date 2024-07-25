@@ -15,12 +15,12 @@ declare(strict_types=1);
 
 namespace Volt\Database;
 
-use Symfony\Component\Translation\TranslatorInterface;
-use Volt\Adapter\ConfigurationAdapter;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+use Symfony\Component\Translation\TranslatorInterface;
+use Volt\Adapter\ConfigurationAdapter;
 
 class Configure
 {
